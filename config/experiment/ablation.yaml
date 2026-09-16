@@ -1,0 +1,52 @@
+# ─────────────────────────────────────────────────────────────
+# Kinbridge-Sync — Ablation ladder configuration
+# Feature-flag combinations at fixed 90s outage
+# ─────────────────────────────────────────────────────────────
+
+# Fixed outage duration for ablation
+outage_duration_s: 90
+
+# Episodes per ablation cell
+episodes_per_cell: 200
+
+# Ablation ladder — each row adds one capability
+# Flags: enable_intent_keys, enable_staleness_check, enable_epoch_guard
+ablation_rows:
+  - name: "buffer_only"
+    description: "WAL buffer, no idempotency, no staleness, no epoch guard"
+    enable_intent_keys: false
+    enable_staleness_check: false
+    enable_epoch_guard: false
+
+  - name: "plus_hash_keys"
+    description: "Buffer + k_payload hash keys"
+    enable_intent_keys: false
+    enable_staleness_check: false
+    enable_epoch_guard: false
+
+  - name: "plus_intent_keys"
+    description: "Buffer + k_intent keys (stable across rephrasings)"
+    enable_intent_keys: true
+    enable_staleness_check: false
+    enable_epoch_guard: false
+
+  - name: "plus_staleness"
+    description: "Buffer + intent keys + ttl/V_pre staleness check"
+    enable_intent_keys: true
+    enable_staleness_check: true
+    enable_epoch_guard: false
+
+  - name: "plus_epoch_guard"
+    description: "Buffer + intent keys + staleness + epoch guard"
+    enable_intent_keys: true
+    enable_staleness_check: true
+    enable_epoch_guard: true
+
+  - name: "full"
+    description: "Full Algorithm 1 (all checks)"
+    enable_intent_keys: true
+    enable_staleness_check: true
+    enable_epoch_guard: true
+
+# Reproducibility
+random_seed: 42

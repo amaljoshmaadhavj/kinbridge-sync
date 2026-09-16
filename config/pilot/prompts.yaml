@@ -1,0 +1,52 @@
+# ─────────────────────────────────────────────────────────────
+# Kinbridge-Sync — Prompts for the pilot study (Phase 1)
+# 19 prompts across 3 tool classes: navigation, data-write, dispatch
+# ─────────────────────────────────────────────────────────────
+
+navigation:
+  - id: "nav_01"
+    text: "Navigate to coordinates 45.231, 6.887 using the fastest route."
+  - id: "nav_02"
+    text: "Go to latitude 38.907 and longitude -77.036, avoiding highways."
+  - id: "nav_03"
+    text: "Drive the drone to 51.5074N, 0.1278W on the most fuel-efficient path."
+  - id: "nav_04"
+    text: "Set course for 35.6762N, 139.6503E, mode: autonomous."
+  - id: "nav_05"
+    text: "Route the vehicle to coordinates 40.7128, -74.0060, fastest available."
+  - id: "nav_06"
+    text: "Navigate to 48.8566, 2.3522 using shortest path."
+  - id: "nav_07"
+    text: "Move to location -33.8688, 151.2093, mode: standard."
+
+data_write:
+  - id: "dw_01"
+    text: "Log inspection for site_id alpha-7, status: passed, notes: no anomalies detected."
+  - id: "dw_02"
+    text: "Record inspection at site beta-12, status: warning, notes: elevated vibration."
+  - id: "dw_03"
+    text: "Log data for site gamma-3, status: failed, notes: structural crack detected."
+  - id: "dw_04"
+    text: "Write inspection record for delta-9, status: passed, notes: within normal parameters."
+  - id: "dw_05"
+    text: "Log inspection at epsilon-1, status: warning, notes: temperature exceeds threshold."
+  - id: "dw_06"
+    text: "Record for site zeta-5, status: passed, notes: all systems nominal."
+  - id: "dw_07"
+    text: "Write inspection for eta-8, status: failed, notes: battery depleted mid-scan."
+
+dispatch:
+  - id: "dsp_01"
+    text: "Request supply drop at 45.231, 6.887, payload: medical kit, priority: high."
+  - id: "dsp_02"
+    text: "Dispatch a supply package to 38.907, -77.036, payload: food rations, priority: medium."
+  - id: "dsp_03"
+    text: "Request delivery at 51.5074, 0.1278, payload: communication equipment, priority: low."
+  - id: "dsp_04"
+    text: "Send supply drop to 35.6762, 139.6503, payload: fuel cell, priority: high."
+  - id: "dsp_05"
+    text: "Dispatch package to 40.7128, -74.0060, payload: water purification tablet, priority: medium."
+  - id: "dsp_06"
+    text: "Request supply drop at 48.8566, 2.3522, payload: first aid supplies, priority: high."
+  - id: "dsp_07"
+    text: "Send delivery to -33.8688, 151.2093, payload: spare parts, priority: low."

@@ -1,0 +1,69 @@
+# ─────────────────────────────────────────────────────────────
+# Kinbridge-Sync — Tool definitions for pilot & experiment
+# 3 tool classes with JSON-schema signatures for Ollama tool-calling
+# ─────────────────────────────────────────────────────────────
+
+tools:
+  navigate_to:
+    description: "Navigate the agent to a geographic location."
+    parameters:
+      type: object
+      properties:
+        lat:
+          type: number
+          description: "Latitude in decimal degrees"
+        lon:
+          type: number
+          description: "Longitude in decimal degrees"
+        mode:
+          type: string
+          enum: ["fastest", "shortest", "standard", "autonomous"]
+          description: "Routing mode"
+      required:
+        - lat
+        - lon
+        - mode
+
+  log_inspection:
+    description: "Log the result of a site inspection."
+    parameters:
+      type: object
+      properties:
+        site_id:
+          type: string
+          description: "Unique site identifier"
+        status:
+          type: string
+          enum: ["passed", "warning", "failed"]
+          description: "Inspection outcome"
+        notes:
+          type: string
+          description: "Free-text observation notes"
+      required:
+        - site_id
+        - status
+        - notes
+
+  request_supply_drop:
+    description: "Request a supply drop at a location."
+    parameters:
+      type: object
+      properties:
+        lat:
+          type: number
+          description: "Latitude in decimal degrees"
+        lon:
+          type: number
+          description: "Longitude in decimal degrees"
+        payload:
+          type: string
+          description: "Description of the supply payload"
+        priority:
+          type: string
+          enum: ["high", "medium", "low"]
+          description: "Dispatch priority"
+      required:
+        - lat
+        - lon
+        - payload
+        - priority

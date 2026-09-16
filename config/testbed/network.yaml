@@ -1,0 +1,35 @@
+# ─────────────────────────────────────────────────────────────
+# Kinbridge-Sync — Network / Docker testbed configuration
+# ─────────────────────────────────────────────────────────────
+
+# Docker Compose service names
+services:
+  client: "client"
+  edge_a: "edge-a"
+  edge_b: "edge-b"
+
+# Network
+bridge_network: "kinbridge-net"
+
+# Edge node configuration
+edge_nodes:
+  edge_a:
+    redis_port: 6379
+    api_port: 8000
+  edge_b:
+    redis_port: 6380
+    api_port: 8001
+
+# Link monitor EWMA parameters (Jacobson/Karels)
+link_monitor:
+  alpha: 0.125       # EWMA weight for RTT estimate
+  beta: 0.25         # EWMA weight for RTT deviation
+  timeout_threshold: 5  # consecutive timeouts before DOWN
+  recovery_threshold: 3  # consecutive successes before UP
+
+# Replication lag forwarder (Phase 3b)
+replicator:
+  lag_ms_options:
+    - 0       # synchronous replication (C3 control)
+    - 500     # moderate lag
+    - -1      # never (unreplicated, worst case)

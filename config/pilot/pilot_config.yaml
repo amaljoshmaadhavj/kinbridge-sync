@@ -1,0 +1,27 @@
+# ─────────────────────────────────────────────────────────────
+# Kinbridge-Sync — Pilot configuration
+# Phase 1: 3 tools × 19 prompts × key schemes
+# ─────────────────────────────────────────────────────────────
+
+# LLM endpoint
+ollama:
+  base_url: "http://localhost:11434"
+  model_large: "qwen2.5:7b-instruct"
+  model_small: "qwen2.5:1.5b-instruct"
+
+# Key schemes under test
+key_schemes:
+  - "k_payload"
+  - "k_bucket"
+  - "k_intent"
+
+# Bucket width (seconds) for k_bucket scheme
+bucket_width_s: 60.0
+
+# Temperature conditions for divergence measurement
+temperature_sweep:
+  - 0.0
+  - 0.7
+
+# Reproducibility
+random_seed: 42

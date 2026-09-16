@@ -1,0 +1,28 @@
+# ─────────────────────────────────────────────────────────────
+# Kinbridge-Sync — Full factorial experiment configuration
+# 4 methods × 4 outage durations, 100 episodes each
+# ─────────────────────────────────────────────────────────────
+
+# Methods under test
+methods:
+  - name: "cold_restart"
+    description: "Discard buffer, restart from scratch"
+  - name: "naive_retry"
+    description: "Always re-execute blindly (no checks)"
+  - name: "verify_before_retry"
+    description: "Check ledger/V_post only (Mansoor et al. baseline)"
+  - name: "kinbridge_sync"
+    description: "Full Algorithm 1 with all feature flags"
+
+# Outage durations (seconds)
+outage_durations_s:
+  - 0
+  - 10
+  - 90
+  - 300
+
+# Episodes per cell
+episodes_per_cell: 100
+
+# Reproducibility
+random_seed: 42

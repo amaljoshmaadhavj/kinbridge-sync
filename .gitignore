@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints
+
+# mypy
+.mypy_cache/
+
+# pytest
+.pytest_cache/
+
+# Environment variables
+.env
+.env.local
+
+# Docker
+docker-compose.override.yml
+
+# Results / outputs (tracked experimentally, ignored locally)
+results/*.csv
+results/*.json
+results/*.pdf
+results/*.png
+results/*.svg
+!results/.gitkeep
+pilot/*.csv
+pilot/*.json
+!pilot/.gitkeep
+
+# Ollama model cache
+.models/
+
+# OS
+.DS_Store
+Thumbs.db
