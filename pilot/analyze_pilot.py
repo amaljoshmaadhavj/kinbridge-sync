@@ -62,10 +62,6 @@ def compute_divergence_table(
 
             if not a_val or not b_val:
                 mismatch = -1  # failure
-            elif scheme == "k_intent":
-                # Intent key: turn_seq differs, so we check if the *base* matches
-                # (same intent_id → same key by construction)
-                mismatch = 0
             else:
                 mismatch = int(a_val != b_val)
 
@@ -141,7 +137,7 @@ def print_decision_rules(df_summary: pd.DataFrame) -> None:
     for _, row in df_summary.iterrows():
         rule = decision_rule(row["failure_rate"])
         print(f"  {row['scheme']:<12} temp={row['temperature']:.1f}  "
-              f"{row['tool_class']:<14} → {rule}")
+              f"{row['tool_class']:<14} -> {rule}")
 
 
 def main() -> None:

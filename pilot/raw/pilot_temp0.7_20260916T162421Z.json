@@ -1,0 +1,1986 @@
+{
+  "metadata": {
+    "model": "qwen2.5:7b-instruct",
+    "temperature": 0.7,
+    "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+    "agent_id": "pilot-agent-001",
+    "bucket_delta_s": 60.0,
+    "run_timestamp": "20260916T162421Z",
+    "n_prompts": 19
+  },
+  "observations": [
+    {
+      "prompt_id": "nav_01",
+      "intent_id": "nav_int_01",
+      "tool_class": "navigation",
+      "prompt": "Navigate to coordinates 45.231, 6.887 using the fastest route.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "4b749922-d9a5-4929-9e53-e67769148c0a",
+      "timestamp_iso": "2026-09-16T16:11:52.679459+00:00",
+      "timestamp_a1": 1789575053.4443061,
+      "timestamp_a2": 1789575076.0870101,
+      "timestamp_end": 1789575093.5937984,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lon": 6.887,
+          "mode": "fastest",
+          "lat": 45.231
+        },
+        "success": true,
+        "key_payload": "61a6152b7a979fae9f0815db800b5fc072991b1d47aa4c7d98d97bc84f4c63db",
+        "key_bucket": "238be0910552532cd2efc240a3f148a36b1f32438fc051a2fbcd715b2e86ceb7",
+        "key_intent": "7b8ff7d8b41b5f4af10e83c45587bc3e51f86ad93ae141dad240020c33243087",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:11:16.0855777Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_03hmcys7",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lon": 6.887,
+                    "mode": "fastest",
+                    "lat": 45.231
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 20582116800,
+          "load_duration": 241806000,
+          "prompt_eval_count": 400,
+          "prompt_eval_duration": 6163584100,
+          "eval_count": 42,
+          "eval_duration": 13989416600
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 45.231,
+          "lon": 6.887,
+          "mode": "fastest"
+        },
+        "success": true,
+        "key_payload": "61a6152b7a979fae9f0815db800b5fc072991b1d47aa4c7d98d97bc84f4c63db",
+        "key_bucket": "7738052ea0785049da86b72cba3742d87fdf4c36f12bc71c6118ba9a5c93fda4",
+        "key_intent": "7b8ff7d8b41b5f4af10e83c45587bc3e51f86ad93ae141dad240020c33243087",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:11:33.5913122Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_uxsp2xnr",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 45.231,
+                    "lon": 6.887,
+                    "mode": "fastest"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 15437153500,
+          "load_duration": 238798200,
+          "prompt_eval_count": 400,
+          "prompt_eval_duration": 286798100,
+          "eval_count": 42,
+          "eval_duration": 14702978900
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "nav_02",
+      "intent_id": "nav_int_01",
+      "tool_class": "navigation",
+      "prompt": "Go to latitude 45.231 and longitude 6.887, taking the quickest path.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "71dfa143-19f7-46ac-a2d8-c708a983d670",
+      "timestamp_iso": "2026-09-16T16:12:31.700752+00:00",
+      "timestamp_a1": 1789575112.6794999,
+      "timestamp_a2": 1789575134.649917,
+      "timestamp_end": 1789575151.6504605,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 45.231,
+          "lon": 6.887,
+          "mode": "fastest"
+        },
+        "success": true,
+        "key_payload": "61a6152b7a979fae9f0815db800b5fc072991b1d47aa4c7d98d97bc84f4c63db",
+        "key_bucket": "7738052ea0785049da86b72cba3742d87fdf4c36f12bc71c6118ba9a5c93fda4",
+        "key_intent": "7b8ff7d8b41b5f4af10e83c45587bc3e51f86ad93ae141dad240020c33243087",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:12:14.6485941Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_hup00ld9",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 45.231,
+                    "lon": 6.887,
+                    "mode": "fastest"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 19913414000,
+          "load_duration": 267031100,
+          "prompt_eval_count": 402,
+          "prompt_eval_duration": 5452298100,
+          "eval_count": 42,
+          "eval_duration": 13913371200
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "lon": 6.887,
+          "mode": "fastest",
+          "lat": 45.231
+        },
+        "success": true,
+        "key_payload": "61a6152b7a979fae9f0815db800b5fc072991b1d47aa4c7d98d97bc84f4c63db",
+        "key_bucket": "afab7e333f0b52ed717b69ee35335f8de9a0de758cb33e074fcfcc350745df11",
+        "key_intent": "7b8ff7d8b41b5f4af10e83c45587bc3e51f86ad93ae141dad240020c33243087",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:12:31.6485314Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_3nrj4w5q",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lon": 6.887,
+                    "mode": "fastest",
+                    "lat": 45.231
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 14951158500,
+          "load_duration": 238324100,
+          "prompt_eval_count": 402,
+          "prompt_eval_duration": 305761800,
+          "eval_count": 42,
+          "eval_duration": 14138363700
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "nav_03",
+      "intent_id": "nav_int_02",
+      "tool_class": "navigation",
+      "prompt": "Drive the drone to 38.907N, 77.036W on the most fuel-efficient path.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "7c591c99-07be-450f-899a-d93cf42c6c9e",
+      "timestamp_iso": "2026-09-16T16:13:18.869267+00:00",
+      "timestamp_a1": 1789575151.7008188,
+      "timestamp_a2": 1789575179.6894832,
+      "timestamp_end": 1789575198.8066301,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 38.907,
+          "lon": -77.036,
+          "mode": "standard"
+        },
+        "success": true,
+        "key_payload": "7f65d2e3c80bd4211fa7571ea11ad5572c608fd2256b5767a91f1f249c989c50",
+        "key_bucket": "1e3b87fca701ef8f3cf7eabab97191b532350676d255268b8678cdfa84d9a954",
+        "key_intent": "eebd593645cd00187df2b04c6bc720ecab6a3a17bee6befbf4ed46217f913a51",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:12:59.6870245Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_elxfqm41",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 38.907,
+                    "lon": -77.036,
+                    "mode": "standard"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 25949364700,
+          "load_duration": 283163200,
+          "prompt_eval_count": 406,
+          "prompt_eval_duration": 10057310600,
+          "eval_count": 42,
+          "eval_duration": 15391712600
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "lon": -77.036,
+          "mode": "standard",
+          "lat": 38.907
+        },
+        "success": true,
+        "key_payload": "7f65d2e3c80bd4211fa7571ea11ad5572c608fd2256b5767a91f1f249c989c50",
+        "key_bucket": "1e3b87fca701ef8f3cf7eabab97191b532350676d255268b8678cdfa84d9a954",
+        "key_intent": "eebd593645cd00187df2b04c6bc720ecab6a3a17bee6befbf4ed46217f913a51",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:13:18.8048078Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_c0mv98wk",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lon": -77.036,
+                    "mode": "standard",
+                    "lat": 38.907
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 17083508300,
+          "load_duration": 309805800,
+          "prompt_eval_count": 406,
+          "prompt_eval_duration": 355923600,
+          "eval_count": 42,
+          "eval_duration": 16247486900
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "nav_04",
+      "intent_id": "nav_int_02",
+      "tool_class": "navigation",
+      "prompt": "Route the vehicle to coordinates 38.907, -77.036, mode: standard.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "d6e3d3c0-4467-43ec-a621-1647385b973a",
+      "timestamp_iso": "2026-09-16T16:14:01.655094+00:00",
+      "timestamp_a1": 1789575198.869332,
+      "timestamp_a2": 1789575223.2774067,
+      "timestamp_end": 1789575241.592549,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lon": -77.036,
+          "mode": "standard",
+          "lat": 38.907
+        },
+        "success": true,
+        "key_payload": "7f65d2e3c80bd4211fa7571ea11ad5572c608fd2256b5767a91f1f249c989c50",
+        "key_bucket": "12951d9394c4db22d19ba17ba5990ff842dcde8ba025c57e8ad8e83ff91b911e",
+        "key_intent": "eebd593645cd00187df2b04c6bc720ecab6a3a17bee6befbf4ed46217f913a51",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:13:43.2758941Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_acrbyf43",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lon": -77.036,
+                    "mode": "standard",
+                    "lat": 38.907
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 22358604600,
+          "load_duration": 457323400,
+          "prompt_eval_count": 403,
+          "prompt_eval_duration": 6447099400,
+          "eval_count": 42,
+          "eval_duration": 15220050500
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 38.907,
+          "lon": -77.036,
+          "mode": "standard"
+        },
+        "success": true,
+        "key_payload": "7f65d2e3c80bd4211fa7571ea11ad5572c608fd2256b5767a91f1f249c989c50",
+        "key_bucket": "12951d9394c4db22d19ba17ba5990ff842dcde8ba025c57e8ad8e83ff91b911e",
+        "key_intent": "eebd593645cd00187df2b04c6bc720ecab6a3a17bee6befbf4ed46217f913a51",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:14:01.5911602Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_h5714r4s",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 38.907,
+                    "lon": -77.036,
+                    "mode": "standard"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 16276675800,
+          "load_duration": 307517400,
+          "prompt_eval_count": 403,
+          "prompt_eval_duration": 375268900,
+          "eval_count": 42,
+          "eval_duration": 15340776800
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "nav_05",
+      "intent_id": "nav_int_03",
+      "tool_class": "navigation",
+      "prompt": "Set course for 51.5074, -0.1278, mode: autonomous.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "db4a9617-878d-4934-9821-28a622ab6f0b",
+      "timestamp_iso": "2026-09-16T16:14:43.261225+00:00",
+      "timestamp_a1": 1789575241.6551552,
+      "timestamp_a2": 1789575265.3157997,
+      "timestamp_end": 1789575283.2319055,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 51.5074,
+          "lon": -0.1278,
+          "mode": "autonomous"
+        },
+        "success": true,
+        "key_payload": "4defed370f7eea4b4506304f377497e6a3e2e48244f27437258cfcf9e962b6c4",
+        "key_bucket": "851368c27a81adbdbf3a81cd19c4a94e11895e40f3a464abb6f93bec9f25d303",
+        "key_intent": "0a3ac4b9673235081f7ebaa995c91a885a0a205e464a9322502827e70c7670de",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:14:25.3143894Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_51esdh19",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 51.5074,
+                    "lon": -0.1278,
+                    "mode": "autonomous"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 21623629300,
+          "load_duration": 248290600,
+          "prompt_eval_count": 402,
+          "prompt_eval_duration": 5936665300,
+          "eval_count": 44,
+          "eval_duration": 15127611800
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "mode": "autonomous",
+          "lat": 51.5074,
+          "lon": -0.1278
+        },
+        "success": true,
+        "key_payload": "4defed370f7eea4b4506304f377497e6a3e2e48244f27437258cfcf9e962b6c4",
+        "key_bucket": "851368c27a81adbdbf3a81cd19c4a94e11895e40f3a464abb6f93bec9f25d303",
+        "key_intent": "0a3ac4b9673235081f7ebaa995c91a885a0a205e464a9322502827e70c7670de",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:14:43.2309746Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_3p8xl9w7",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "mode": "autonomous",
+                    "lat": 51.5074,
+                    "lon": -0.1278
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 15859429900,
+          "load_duration": 249853400,
+          "prompt_eval_count": 402,
+          "prompt_eval_duration": 308864600,
+          "eval_count": 44,
+          "eval_duration": 15044320100
+        }
+      },
+      "similarity": 0.9999999403953552,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "nav_06",
+      "intent_id": "nav_int_04",
+      "tool_class": "navigation",
+      "prompt": "Navigate to 35.6762, 139.6503 using the shortest path.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "e2b69c08-99e9-400a-b4b2-434ccabcd6e7",
+      "timestamp_iso": "2026-09-16T16:15:25.411956+00:00",
+      "timestamp_a1": 1789575283.2612708,
+      "timestamp_a2": 1789575307.2058775,
+      "timestamp_end": 1789575325.385717,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lon": 139.6503,
+          "mode": "shortest",
+          "lat": 35.6762
+        },
+        "success": true,
+        "key_payload": "7fc9c55acae89f2e70738610cffcf65b1435a297ca41682c4dfb755ae0aaaa5b",
+        "key_bucket": "d3a92c2b60375e7c86e045d9560de14096ffa8efe168c894e1cd6ff2ef026877",
+        "key_intent": "014864fbee885313eb30f38c4e4bb795fd72862e51202d358c37a2c8ca506e57",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:15:07.2044449Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_l33kv4ks",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lon": 139.6503,
+                    "mode": "shortest",
+                    "lat": 35.6762
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 21895694800,
+          "load_duration": 250827400,
+          "prompt_eval_count": 403,
+          "prompt_eval_duration": 5437776300,
+          "eval_count": 46,
+          "eval_duration": 15925197300
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 35.6762,
+          "lon": 139.6503,
+          "mode": "shortest"
+        },
+        "success": true,
+        "key_payload": "7fc9c55acae89f2e70738610cffcf65b1435a297ca41682c4dfb755ae0aaaa5b",
+        "key_bucket": "dfde8c8927cca2052ee7a96d440367fd716fc2e32bd3e7534699579e8ccb07a2",
+        "key_intent": "014864fbee885313eb30f38c4e4bb795fd72862e51202d358c37a2c8ca506e57",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:15:25.3842442Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_ecyck368",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 35.6762,
+                    "lon": 139.6503,
+                    "mode": "shortest"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 16112461800,
+          "load_duration": 237951800,
+          "prompt_eval_count": 403,
+          "prompt_eval_duration": 292106400,
+          "eval_count": 46,
+          "eval_duration": 15256059700
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "nav_07",
+      "intent_id": "nav_int_05",
+      "tool_class": "navigation",
+      "prompt": "Move to location 40.7128, -74.0060, fastest available.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "e385ba73-5ccc-4caa-8152-7693f65cd0f0",
+      "timestamp_iso": "2026-09-16T16:16:05.672612+00:00",
+      "timestamp_a1": 1789575325.4119968,
+      "timestamp_a2": 1789575348.1135547,
+      "timestamp_end": 1789575365.616281,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 40.7128,
+          "lon": -74.006,
+          "mode": "fastest"
+        },
+        "success": true,
+        "key_payload": "65a8e0f04559e8122d29aa4c0d421b312e13372557410aa1c14759d3c4967802",
+        "key_bucket": "4f086666c6595c64313314dcba2fe226e3e3f4d4a6de38c102f81afe5193c468",
+        "key_intent": "217f9c188e0d6f98abdee6cee985cd23f45b98da24220963ba8bb2b16ac040fe",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:15:48.1125596Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_b8a6w7te",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 40.7128,
+                    "lon": -74.006,
+                    "mode": "fastest"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 20652836700,
+          "load_duration": 239053600,
+          "prompt_eval_count": 402,
+          "prompt_eval_duration": 5292477500,
+          "eval_count": 44,
+          "eval_duration": 14867139100
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 40.7128,
+          "lon": -74.006,
+          "mode": "fastest"
+        },
+        "success": true,
+        "key_payload": "65a8e0f04559e8122d29aa4c0d421b312e13372557410aa1c14759d3c4967802",
+        "key_bucket": "4f086666c6595c64313314dcba2fe226e3e3f4d4a6de38c102f81afe5193c468",
+        "key_intent": "217f9c188e0d6f98abdee6cee985cd23f45b98da24220963ba8bb2b16ac040fe",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:16:05.6143592Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_5fl7r5u0",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 40.7128,
+                    "lon": -74.006,
+                    "mode": "fastest"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 15429436300,
+          "load_duration": 241007100,
+          "prompt_eval_count": 402,
+          "prompt_eval_duration": 289082500,
+          "eval_count": 44,
+          "eval_duration": 14600458800
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "nav_08",
+      "intent_id": "nav_int_05",
+      "tool_class": "navigation",
+      "prompt": "Go to coordinates 40.7128, -74.0060 avoiding highways.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "a2d0a74a-ed46-4e15-9556-3fa98763c9df",
+      "timestamp_iso": "2026-09-16T16:16:46.683596+00:00",
+      "timestamp_a1": 1789575365.672665,
+      "timestamp_a2": 1789575389.2630665,
+      "timestamp_end": 1789575406.6507432,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 40.7128,
+          "lon": -74.006,
+          "mode": "autonomous"
+        },
+        "success": true,
+        "key_payload": "4d1572d1601482e643b138507f7fa2ce2f1a45bfb31091a406b31f44cfbd2da4",
+        "key_bucket": "a3a63c99d3f1323b64e151704ebee2de1202b84a26f27b65934fc95e698631fc",
+        "key_intent": "217f9c188e0d6f98abdee6cee985cd23f45b98da24220963ba8bb2b16ac040fe",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:16:29.2617028Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_pvd0cr71",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 40.7128,
+                    "lon": -74.006,
+                    "mode": "autonomous"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 21516985300,
+          "load_duration": 264115700,
+          "prompt_eval_count": 401,
+          "prompt_eval_duration": 5659867900,
+          "eval_count": 44,
+          "eval_duration": 15311629300
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 40.7128,
+          "lon": -74.006,
+          "mode": "standard"
+        },
+        "success": true,
+        "key_payload": "9bf1dbd2e1776fc049dabfe8212d47b6a8e974b15dd73ec13c964746c0b63bbd",
+        "key_bucket": "204594329db1f7a187f31b195e00ae859ccd0db910bc8622ac2d66811afa9db7",
+        "key_intent": "217f9c188e0d6f98abdee6cee985cd23f45b98da24220963ba8bb2b16ac040fe",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:16:46.6494508Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_yqrbcnrl",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 40.7128,
+                    "lon": -74.006,
+                    "mode": "standard"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 15326442300,
+          "load_duration": 237019500,
+          "prompt_eval_count": 401,
+          "prompt_eval_duration": 289881400,
+          "eval_count": 43,
+          "eval_duration": 14513405100
+        }
+      },
+      "similarity": 0.8769266605377197,
+      "mismatch_payload": 1,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "nav_09",
+      "intent_id": "nav_int_06",
+      "tool_class": "navigation",
+      "prompt": "Navigate the unit to 48.8566, 2.3522, mode: standard.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "2f7cba75-fb0c-40a6-91c7-4051ff7d6a8e",
+      "timestamp_iso": "2026-09-16T16:17:27.760408+00:00",
+      "timestamp_a1": 1789575406.6836433,
+      "timestamp_a2": 1789575429.3560712,
+      "timestamp_end": 1789575447.6860201,
+      "a1": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 48.8566,
+          "lon": 2.3522,
+          "mode": "standard"
+        },
+        "success": true,
+        "key_payload": "15ca0e0701cf1eb14b3296c25304aadc0bfe1bfc5c9c6adbc853781ec5bc7d6f",
+        "key_bucket": "2e2c913c1f854cb870e7977473c894797740531a4d5666a8727df3160819b5d3",
+        "key_intent": "83179a78e78312e8f025437786257ce80c1845f883ebd6a9d9e6d93e819b9ff4",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:17:09.3545699Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_dn70gvyq",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 48.8566,
+                    "lon": 2.3522,
+                    "mode": "standard"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 20611279900,
+          "load_duration": 232311800,
+          "prompt_eval_count": 403,
+          "prompt_eval_duration": 5384218300,
+          "eval_count": 43,
+          "eval_duration": 14733686700
+        }
+      },
+      "a2": {
+        "tool": "navigate_to",
+        "args": {
+          "lat": 48.8566,
+          "lon": 2.3522,
+          "mode": "standard"
+        },
+        "success": true,
+        "key_payload": "15ca0e0701cf1eb14b3296c25304aadc0bfe1bfc5c9c6adbc853781ec5bc7d6f",
+        "key_bucket": "fd69a8996fc76e064ba88212ae0d1890050d667094dc76b815b90df1caa54958",
+        "key_intent": "83179a78e78312e8f025437786257ce80c1845f883ebd6a9d9e6d93e819b9ff4",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:17:27.6841937Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_2fyq4k26",
+                "function": {
+                  "index": 0,
+                  "name": "navigate_to",
+                  "arguments": {
+                    "lat": 48.8566,
+                    "lon": 2.3522,
+                    "mode": "standard"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 16271376300,
+          "load_duration": 240358400,
+          "prompt_eval_count": 403,
+          "prompt_eval_duration": 332760600,
+          "eval_count": 43,
+          "eval_duration": 15523498800
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "insp_01",
+      "intent_id": "insp_int_01",
+      "tool_class": "inspection",
+      "prompt": "Log inspection for site alpha-7, status passed, notes: no anomalies detected.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "9976a288-8a85-4fe1-bfc2-2bc43b047486",
+      "timestamp_iso": "2026-09-16T16:18:04.405446+00:00",
+      "timestamp_a1": 1789575447.760481,
+      "timestamp_a2": 1789575468.4235818,
+      "timestamp_end": 1789575484.3440046,
+      "a1": {
+        "tool": "log_inspection",
+        "args": {
+          "site_id": "alpha-7",
+          "status": "passed",
+          "notes": "no anomalies detected"
+        },
+        "success": true,
+        "key_payload": "15258f6808f3717b467513a8531bbbea9b6c69ceeef6aff88fa0454b946d7bf9",
+        "key_bucket": "362d1f2a60c5bb574a195576659754289534c0506dd89544c21219e352013a24",
+        "key_intent": "c5658bd59adbc1e0e4d76b3f44e2cc1d351f00ec35afe9a2ed7f06544d1f75c3",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:17:48.4219267Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_7cajj5ym",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "site_id": "alpha-7",
+                    "status": "passed",
+                    "notes": "no anomalies detected"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 18609825600,
+          "load_duration": 282898100,
+          "prompt_eval_count": 395,
+          "prompt_eval_duration": 4291593900,
+          "eval_count": 38,
+          "eval_duration": 13816250100
+        }
+      },
+      "a2": {
+        "tool": "log_inspection",
+        "args": {
+          "site_id": "alpha-7",
+          "status": "passed",
+          "notes": "no anomalies detected"
+        },
+        "success": true,
+        "key_payload": "15258f6808f3717b467513a8531bbbea9b6c69ceeef6aff88fa0454b946d7bf9",
+        "key_bucket": "362d1f2a60c5bb574a195576659754289534c0506dd89544c21219e352013a24",
+        "key_intent": "c5658bd59adbc1e0e4d76b3f44e2cc1d351f00ec35afe9a2ed7f06544d1f75c3",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:18:04.34228Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_i8vjmjat",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "site_id": "alpha-7",
+                    "status": "passed",
+                    "notes": "no anomalies detected"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 13880747600,
+          "load_duration": 229167900,
+          "prompt_eval_count": 395,
+          "prompt_eval_duration": 305829100,
+          "eval_count": 38,
+          "eval_duration": 13127513700
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "insp_02",
+      "intent_id": "insp_int_01",
+      "tool_class": "inspection",
+      "prompt": "Record inspection result at site alpha-7 — passed, everything looks normal.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "be0e3019-e654-4d08-a8ae-bd42a1db98d1",
+      "timestamp_iso": "2026-09-16T16:18:40.688569+00:00",
+      "timestamp_a1": 1789575484.4055042,
+      "timestamp_a2": 1789575504.9640222,
+      "timestamp_end": 1789575520.6563864,
+      "a1": {
+        "tool": "log_inspection",
+        "args": {
+          "site_id": "alpha-7",
+          "status": "passed",
+          "notes": "Everything looks normal."
+        },
+        "success": true,
+        "key_payload": "9a9b258fa2a352c191699d774b334ff7afc83387cb64d8df9a3e58f5d15f36e0",
+        "key_bucket": "5db2ea7064dd8fcc6607268a89e480e7303dc1d03f4a53e263325f7f4215427f",
+        "key_intent": "c5658bd59adbc1e0e4d76b3f44e2cc1d351f00ec35afe9a2ed7f06544d1f75c3",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:18:24.9628829Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_8v3rdsvn",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "site_id": "alpha-7",
+                    "status": "passed",
+                    "notes": "Everything looks normal."
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 18500386200,
+          "load_duration": 284985400,
+          "prompt_eval_count": 393,
+          "prompt_eval_duration": 4352892100,
+          "eval_count": 39,
+          "eval_duration": 13619200400
+        }
+      },
+      "a2": {
+        "tool": "log_inspection",
+        "args": {
+          "status": "passed",
+          "notes": "Everything looks normal.",
+          "site_id": "alpha-7"
+        },
+        "success": true,
+        "key_payload": "9a9b258fa2a352c191699d774b334ff7afc83387cb64d8df9a3e58f5d15f36e0",
+        "key_bucket": "5db2ea7064dd8fcc6607268a89e480e7303dc1d03f4a53e263325f7f4215427f",
+        "key_intent": "c5658bd59adbc1e0e4d76b3f44e2cc1d351f00ec35afe9a2ed7f06544d1f75c3",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:18:40.6548623Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_uop6nni7",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "status": "passed",
+                    "notes": "Everything looks normal.",
+                    "site_id": "alpha-7"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 13623547900,
+          "load_duration": 249876400,
+          "prompt_eval_count": 393,
+          "prompt_eval_duration": 292114400,
+          "eval_count": 39,
+          "eval_duration": 12815791800
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "insp_03",
+      "intent_id": "insp_int_02",
+      "tool_class": "inspection",
+      "prompt": "Log data for site beta-12, status warning, notes: elevated vibration readings.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "f225b506-a145-4f98-91fe-4a27eb18ce78",
+      "timestamp_iso": "2026-09-16T16:19:17.950494+00:00",
+      "timestamp_a1": 1789575520.6886182,
+      "timestamp_a2": 1789575541.2337453,
+      "timestamp_end": 1789575557.90766,
+      "a1": {
+        "tool": "log_inspection",
+        "args": {
+          "status": "warning",
+          "notes": "elevated vibration readings",
+          "site_id": "beta-12"
+        },
+        "success": true,
+        "key_payload": "d1a04ef764a7baced892333d617c21440a85511e2ec4382844c94a52b7847375",
+        "key_bucket": "ea0f319f9c1f7e88ce1e2b5c6d9bbbd3be1c49a0139244da57eaf262d5b39aa3",
+        "key_intent": "f547c03ed9386a02b06cfca352b1b4d8591614dca21c5b384a120e13438151fd",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:19:01.2318935Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_hrjd71jh",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "status": "warning",
+                    "notes": "elevated vibration readings",
+                    "site_id": "beta-12"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 18469117700,
+          "load_duration": 246047800,
+          "prompt_eval_count": 396,
+          "prompt_eval_duration": 4158307100,
+          "eval_count": 41,
+          "eval_duration": 13743634800
+        }
+      },
+      "a2": {
+        "tool": "log_inspection",
+        "args": {
+          "site_id": "beta-12",
+          "status": "warning",
+          "notes": "elevated vibration readings"
+        },
+        "success": true,
+        "key_payload": "d1a04ef764a7baced892333d617c21440a85511e2ec4382844c94a52b7847375",
+        "key_bucket": "86696d9d32010893e982ee9f0684a57ca9ff1fbf404d8313a04cbe59aefc99b6",
+        "key_intent": "f547c03ed9386a02b06cfca352b1b4d8591614dca21c5b384a120e13438151fd",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:19:17.9062375Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_1bwzzpf7",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "site_id": "beta-12",
+                    "status": "warning",
+                    "notes": "elevated vibration readings"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 14615445300,
+          "load_duration": 236188600,
+          "prompt_eval_count": 396,
+          "prompt_eval_duration": 302925400,
+          "eval_count": 41,
+          "eval_duration": 13848895200
+        }
+      },
+      "similarity": 0.9999999403953552,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "insp_04",
+      "intent_id": "insp_int_03",
+      "tool_class": "inspection",
+      "prompt": "Write inspection record for gamma-3, status failed, structural crack found.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "856d8467-f6b9-4b2c-b8f5-32c4a8a3a1b5",
+      "timestamp_iso": "2026-09-16T16:19:54.240853+00:00",
+      "timestamp_a1": 1789575557.9505436,
+      "timestamp_a2": 1789575577.6133435,
+      "timestamp_end": 1789575594.2193823,
+      "a1": {
+        "tool": "log_inspection",
+        "args": {
+          "status": "failed",
+          "notes": "Structural crack found",
+          "site_id": "gamma-3"
+        },
+        "success": true,
+        "key_payload": "9764ffca15b4c99cb4560ea975995773f1d390c1aab306e1456fb70ffa880392",
+        "key_bucket": "4df9e6333cd0529418e1af872145600e5c2b96be06ef132bbb9398ffc252c02d",
+        "key_intent": "bcd7805695e76c4f1b5f19c98f8385db6202ea6b576819238bc16d377b6b79bd",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:19:37.611251Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_urbhb552",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "status": "failed",
+                    "notes": "Structural crack found",
+                    "site_id": "gamma-3"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 17588610300,
+          "load_duration": 253724000,
+          "prompt_eval_count": 393,
+          "prompt_eval_duration": 3961523200,
+          "eval_count": 39,
+          "eval_duration": 13158871400
+        }
+      },
+      "a2": {
+        "tool": "log_inspection",
+        "args": {
+          "site_id": "gamma-3",
+          "status": "failed",
+          "notes": "Structural crack found"
+        },
+        "success": true,
+        "key_payload": "9764ffca15b4c99cb4560ea975995773f1d390c1aab306e1456fb70ffa880392",
+        "key_bucket": "4df9e6333cd0529418e1af872145600e5c2b96be06ef132bbb9398ffc252c02d",
+        "key_intent": "bcd7805695e76c4f1b5f19c98f8385db6202ea6b576819238bc16d377b6b79bd",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:19:54.218434Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_pb7hmsln",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "site_id": "gamma-3",
+                    "status": "failed",
+                    "notes": "Structural crack found"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 14576628400,
+          "load_duration": 265033600,
+          "prompt_eval_count": 393,
+          "prompt_eval_duration": 308342400,
+          "eval_count": 39,
+          "eval_duration": 13811226400
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "insp_05",
+      "intent_id": "insp_int_03",
+      "tool_class": "inspection",
+      "prompt": "Log inspection at site gamma-3 — failed, there is a structural crack in the support beam.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "eb5ed0c0-6915-453c-9970-2ac30fbd2411",
+      "timestamp_iso": "2026-09-16T16:20:35.745733+00:00",
+      "timestamp_a1": 1789575594.2408922,
+      "timestamp_a2": 1789575617.8046296,
+      "timestamp_end": 1789575635.683363,
+      "a1": {
+        "tool": "log_inspection",
+        "args": {
+          "site_id": "gamma-3",
+          "status": "failed",
+          "notes": "Structural crack observed in the support beam."
+        },
+        "success": true,
+        "key_payload": "e28df333dbb842e2cebb095f6ed959623456c32ec64d55bf6129338b85192692",
+        "key_bucket": "426b08bcc6927914809c89efe2945290cb715cb5c084b17bfd0f9bd132e590f6",
+        "key_intent": "bcd7805695e76c4f1b5f19c98f8385db6202ea6b576819238bc16d377b6b79bd",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:20:17.8026218Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_ei4wzga3",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "site_id": "gamma-3",
+                    "status": "failed",
+                    "notes": "Structural crack observed in the support beam."
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 21491419900,
+          "load_duration": 240892000,
+          "prompt_eval_count": 398,
+          "prompt_eval_duration": 4667724400,
+          "eval_count": 44,
+          "eval_duration": 16366781700
+        }
+      },
+      "a2": {
+        "tool": "log_inspection",
+        "args": {
+          "notes": "Structural crack observed in the support beam.",
+          "site_id": "gamma-3",
+          "status": "failed"
+        },
+        "success": true,
+        "key_payload": "e28df333dbb842e2cebb095f6ed959623456c32ec64d55bf6129338b85192692",
+        "key_bucket": "2bfbd15979744fbb786ccd55ce553fc62338c3fa4fdaf965bc36dd634e0f6899",
+        "key_intent": "bcd7805695e76c4f1b5f19c98f8385db6202ea6b576819238bc16d377b6b79bd",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:20:35.6817484Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_ujzxypjm",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "notes": "Structural crack observed in the support beam.",
+                    "site_id": "gamma-3",
+                    "status": "failed"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 15824972500,
+          "load_duration": 241600400,
+          "prompt_eval_count": 398,
+          "prompt_eval_duration": 438493300,
+          "eval_count": 44,
+          "eval_duration": 14813193700
+        }
+      },
+      "similarity": 0.9999998807907104,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "insp_06",
+      "intent_id": "insp_int_04",
+      "tool_class": "inspection",
+      "prompt": "Record for delta-9, status passed, all measurements within normal parameters.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "102b1a65-eda3-4d49-ae23-43c7819845bc",
+      "timestamp_iso": "2026-09-16T16:21:12.017668+00:00",
+      "timestamp_a1": 1789575635.745782,
+      "timestamp_a2": 1789575655.3074498,
+      "timestamp_end": 1789575671.9749148,
+      "a1": {
+        "tool": "log_inspection",
+        "args": {
+          "site_id": "delta-9",
+          "status": "passed",
+          "notes": "All measurements within normal parameters."
+        },
+        "success": true,
+        "key_payload": "28a4cfdf0c357a32d661718a05a161a4104dd242e3f849a7ca92ba9bbc38d4c3",
+        "key_bucket": "02a5df19c9585e5bd7ed25be607d6df77c2088d4ce7709f30dd116d40c59ff98",
+        "key_intent": "8fb34f05b208e6bb9611092f0ace33c09891265be6ce998b3501b040efcfa54d",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:20:55.3060905Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_tbjcvpie",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "site_id": "delta-9",
+                    "status": "passed",
+                    "notes": "All measurements within normal parameters."
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 17510872000,
+          "load_duration": 266044300,
+          "prompt_eval_count": 393,
+          "prompt_eval_duration": 3456841400,
+          "eval_count": 41,
+          "eval_duration": 13489503900
+        }
+      },
+      "a2": {
+        "tool": "log_inspection",
+        "args": {
+          "site_id": "delta-9",
+          "status": "passed",
+          "notes": "All measurements within normal parameters."
+        },
+        "success": true,
+        "key_payload": "28a4cfdf0c357a32d661718a05a161a4104dd242e3f849a7ca92ba9bbc38d4c3",
+        "key_bucket": "02a5df19c9585e5bd7ed25be607d6df77c2088d4ce7709f30dd116d40c59ff98",
+        "key_intent": "8fb34f05b208e6bb9611092f0ace33c09891265be6ce998b3501b040efcfa54d",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:21:11.9735935Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_7v8w56kh",
+                "function": {
+                  "index": 0,
+                  "name": "log_inspection",
+                  "arguments": {
+                    "site_id": "delta-9",
+                    "status": "passed",
+                    "notes": "All measurements within normal parameters."
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 14611145000,
+          "load_duration": 253162400,
+          "prompt_eval_count": 393,
+          "prompt_eval_duration": 278760600,
+          "eval_count": 41,
+          "eval_duration": 13752652900
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "supply_01",
+      "intent_id": "sdrop_int_01",
+      "tool_class": "supply_drop",
+      "prompt": "Request supply drop at 45.231, 6.887, payload: medical kit, priority high.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "dac0d534-ef53-45a3-b282-d4f5b2ab255f",
+      "timestamp_iso": "2026-09-16T16:21:59.873741+00:00",
+      "timestamp_a1": 1789575672.0177402,
+      "timestamp_a2": 1789575700.3238256,
+      "timestamp_end": 1789575719.841533,
+      "a1": {
+        "tool": "request_supply_drop",
+        "args": {
+          "priority": "high",
+          "lat": 45.231,
+          "lon": 6.887,
+          "payload": "medical kit"
+        },
+        "success": true,
+        "key_payload": "1de180f504663c9c1591f9e6f5a7276bd09cb7d12b0a27201d14d975f4d043af",
+        "key_bucket": "2197b29f6d3f9f8f5496e1b20318c4728d5bea8ad0c4ee3f9fd43afc14cdedcb",
+        "key_intent": "271455d27d1a4a390ca40d9517fbab005cee6fa6b17e1b4eb35f8a4ae4431dd1",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:21:40.3226837Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_9uxvsi0t",
+                "function": {
+                  "index": 0,
+                  "name": "request_supply_drop",
+                  "arguments": {
+                    "priority": "high",
+                    "lat": 45.231,
+                    "lon": 6.887,
+                    "payload": "medical kit"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 26231942300,
+          "load_duration": 256420100,
+          "prompt_eval_count": 405,
+          "prompt_eval_duration": 9097583000,
+          "eval_count": 49,
+          "eval_duration": 16512355400
+        }
+      },
+      "a2": {
+        "tool": "request_supply_drop",
+        "args": {
+          "payload": "medical kit",
+          "priority": "high",
+          "lat": 45.231,
+          "lon": 6.887
+        },
+        "success": true,
+        "key_payload": "1de180f504663c9c1591f9e6f5a7276bd09cb7d12b0a27201d14d975f4d043af",
+        "key_bucket": "2197b29f6d3f9f8f5496e1b20318c4728d5bea8ad0c4ee3f9fd43afc14cdedcb",
+        "key_intent": "271455d27d1a4a390ca40d9517fbab005cee6fa6b17e1b4eb35f8a4ae4431dd1",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:21:59.8402695Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_qc5d9jzb",
+                "function": {
+                  "index": 0,
+                  "name": "request_supply_drop",
+                  "arguments": {
+                    "payload": "medical kit",
+                    "priority": "high",
+                    "lat": 45.231,
+                    "lon": 6.887
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 17459271000,
+          "load_duration": 255278600,
+          "prompt_eval_count": 405,
+          "prompt_eval_duration": 290109700,
+          "eval_count": 49,
+          "eval_duration": 16549657100
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 0,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "supply_02",
+      "intent_id": "sdrop_int_01",
+      "tool_class": "supply_drop",
+      "prompt": "Send emergency medical supplies to 45.231, 6.887 — high priority dispatch.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "b0247bef-985e-408f-9303-f03440d423cd",
+      "timestamp_iso": "2026-09-16T16:22:43.784916+00:00",
+      "timestamp_a1": 1789575719.8737867,
+      "timestamp_a2": 1789575744.5182652,
+      "timestamp_end": 1789575763.7325563,
+      "a1": {
+        "tool": "request_supply_drop",
+        "args": {
+          "lat": 45.231,
+          "lon": 6.887,
+          "payload": "Emergency medical supplies",
+          "priority": "high"
+        },
+        "success": true,
+        "key_payload": "499efb78fe295d19ab06df35f72d53d93933398ffd2614c837a1bbbac34b3344",
+        "key_bucket": "e519c66df5d41e035970d063f038e2e46900e349b88d9eb672efd3a5c7497ffb",
+        "key_intent": "271455d27d1a4a390ca40d9517fbab005cee6fa6b17e1b4eb35f8a4ae4431dd1",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:22:24.5171596Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_3u0x9r2p",
+                "function": {
+                  "index": 0,
+                  "name": "request_supply_drop",
+                  "arguments": {
+                    "lat": 45.231,
+                    "lon": 6.887,
+                    "payload": "Emergency medical supplies",
+                    "priority": "high"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 22588412700,
+          "load_duration": 248898400,
+          "prompt_eval_count": 402,
+          "prompt_eval_duration": 4988594800,
+          "eval_count": 50,
+          "eval_duration": 17119785800
+        }
+      },
+      "a2": {
+        "tool": "request_supply_drop",
+        "args": {
+          "payload": "emergency medical supplies",
+          "priority": "high",
+          "lat": 45.231,
+          "lon": 6.887
+        },
+        "success": true,
+        "key_payload": "c6f67740c82f7eceec1443b79f4cffa801662c5aac47d816b50dda35f7b99496",
+        "key_bucket": "0d198b2a5f7d41deac12da58c148ba36980a14a25b1d70d9f4035959eec2104b",
+        "key_intent": "271455d27d1a4a390ca40d9517fbab005cee6fa6b17e1b4eb35f8a4ae4431dd1",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:22:43.7310145Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_2fv8ts8y",
+                "function": {
+                  "index": 0,
+                  "name": "request_supply_drop",
+                  "arguments": {
+                    "payload": "emergency medical supplies",
+                    "priority": "high",
+                    "lat": 45.231,
+                    "lon": 6.887
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 17137924200,
+          "load_duration": 249839600,
+          "prompt_eval_count": 402,
+          "prompt_eval_duration": 291629400,
+          "eval_count": 50,
+          "eval_duration": 16289648100
+        }
+      },
+      "similarity": 1.0,
+      "mismatch_payload": 1,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "supply_03",
+      "intent_id": "sdrop_int_02",
+      "tool_class": "supply_drop",
+      "prompt": "Dispatch a supply package to 38.907, -77.036, payload: food rations, priority medium.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "1fb7942c-33ff-44ff-a1e5-9daed19cb510",
+      "timestamp_iso": "2026-09-16T16:23:32.168363+00:00",
+      "timestamp_a1": 1789575763.7850482,
+      "timestamp_a2": 1789575792.8437965,
+      "timestamp_end": 1789575812.1459076,
+      "a1": {
+        "tool": "request_supply_drop",
+        "args": {
+          "payload": "food rations",
+          "priority": "medium",
+          "lat": 38.907,
+          "lon": -77.036
+        },
+        "success": true,
+        "key_payload": "9f889719b130e5dc8f57bd07cedb85ae93450b6494b6d09da16c49170f3c3f69",
+        "key_bucket": "c4837e99d93bd993f027cebcb94530dc53ee3e57ca7ef5ef76971046cf45290a",
+        "key_intent": "54a2bc6bbf07db47c908235dda5710567e0a8adea7b25cc28f5f116a9f169d2f",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:23:12.8424062Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_ljlat501",
+                "function": {
+                  "index": 0,
+                  "name": "request_supply_drop",
+                  "arguments": {
+                    "payload": "food rations",
+                    "priority": "medium",
+                    "lat": 38.907,
+                    "lon": -77.036
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 26979886000,
+          "load_duration": 245525200,
+          "prompt_eval_count": 408,
+          "prompt_eval_duration": 10082410900,
+          "eval_count": 51,
+          "eval_duration": 16391206200
+        }
+      },
+      "a2": {
+        "tool": "request_supply_drop",
+        "args": {
+          "lon": -77.036,
+          "payload": "food rations",
+          "priority": "medium",
+          "lat": 38.907
+        },
+        "success": true,
+        "key_payload": "9f889719b130e5dc8f57bd07cedb85ae93450b6494b6d09da16c49170f3c3f69",
+        "key_bucket": "1e2de5f75040642c363553b3c0409306e3bd3f7246a1e03a446cf06520567f24",
+        "key_intent": "54a2bc6bbf07db47c908235dda5710567e0a8adea7b25cc28f5f116a9f169d2f",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:23:32.1449515Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_5pbyj0t3",
+                "function": {
+                  "index": 0,
+                  "name": "request_supply_drop",
+                  "arguments": {
+                    "lon": -77.036,
+                    "payload": "food rations",
+                    "priority": "medium",
+                    "lat": 38.907
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 17228524800,
+          "load_duration": 242617800,
+          "prompt_eval_count": 408,
+          "prompt_eval_duration": 286267500,
+          "eval_count": 51,
+          "eval_duration": 16368750000
+        }
+      },
+      "similarity": 0.9999999403953552,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    },
+    {
+      "prompt_id": "supply_04",
+      "intent_id": "sdrop_int_03",
+      "tool_class": "supply_drop",
+      "prompt": "Request delivery at 51.5074, -0.1278, payload: communication equipment, priority low.",
+      "model": "qwen2.5:7b-instruct",
+      "temperature": 0.7,
+      "session_id": "acb1e3fd-a2d3-4d2c-bfb6-37f08a1842ba",
+      "agent_id": "pilot-agent-001",
+      "run_id": "fa2f0c14-5988-424e-ad10-e990a9377466",
+      "timestamp_iso": "2026-09-16T16:24:21.165336+00:00",
+      "timestamp_a1": 1789575812.1684022,
+      "timestamp_a2": 1789575841.4387164,
+      "timestamp_end": 1789575861.127015,
+      "a1": {
+        "tool": "request_supply_drop",
+        "args": {
+          "payload": "communication equipment",
+          "priority": "low",
+          "lat": 51.5074,
+          "lon": -0.1278
+        },
+        "success": true,
+        "key_payload": "509b45d71f2bac9ba9191a9e736030821a8156e35374c5b3f558a1da935425d5",
+        "key_bucket": "bae88bb1b14c91fe6ec073d43ea16fc046ba3a57212c76d94b973f4ddf7d3de7",
+        "key_intent": "81da5bea0d5228cfdfa28f79ea58998f8e4e2fb6b0c88ccef19099f8ca66413e",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:24:01.4374511Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_7t5h13e1",
+                "function": {
+                  "index": 0,
+                  "name": "request_supply_drop",
+                  "arguments": {
+                    "payload": "communication equipment",
+                    "priority": "low",
+                    "lat": 51.5074,
+                    "lon": -0.1278
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 27204308600,
+          "load_duration": 242661700,
+          "prompt_eval_count": 406,
+          "prompt_eval_duration": 10057456900,
+          "eval_count": 51,
+          "eval_duration": 16720990700
+        }
+      },
+      "a2": {
+        "tool": "request_supply_drop",
+        "args": {
+          "lat": 51.5074,
+          "lon": -0.1278,
+          "payload": "communication equipment",
+          "priority": "low"
+        },
+        "success": true,
+        "key_payload": "509b45d71f2bac9ba9191a9e736030821a8156e35374c5b3f558a1da935425d5",
+        "key_bucket": "a76e2d14860413513898bb539c73f5ea223d0eb7c7b8ffc9becb895b1eb986a3",
+        "key_intent": "81da5bea0d5228cfdfa28f79ea58998f8e4e2fb6b0c88ccef19099f8ca66413e",
+        "raw_response": {
+          "model": "qwen2.5:7b-instruct",
+          "created_at": "2026-09-16T16:24:21.1257205Z",
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "id": "call_dr2s1422",
+                "function": {
+                  "index": 0,
+                  "name": "request_supply_drop",
+                  "arguments": {
+                    "lat": 51.5074,
+                    "lon": -0.1278,
+                    "payload": "communication equipment",
+                    "priority": "low"
+                  }
+                }
+              }
+            ]
+          },
+          "done": true,
+          "done_reason": "stop",
+          "total_duration": 17627434300,
+          "load_duration": 243232900,
+          "prompt_eval_count": 406,
+          "prompt_eval_duration": 332312500,
+          "eval_count": 51,
+          "eval_duration": 16817593000
+        }
+      },
+      "similarity": 0.9999998807907104,
+      "mismatch_payload": 0,
+      "mismatch_bucket": 1,
+      "mismatch_intent": 0
+    }
+  ]
+}

@@ -157,6 +157,21 @@ class TestKeySchemes:
         k2 = k_intent("sess-1", 1, "nav_int_02")
         assert k1 != k2
 
+    def test_k_intent_same_session_turn_intent_matches(self):
+        """Regression: a1 and a2 of the same intent MUST produce identical k_intent.
+
+        The paper specifies k_intent = H(session_id || turn_seq || intent_id).
+        For a re-issued action (a2) of the same ground-truth intent, session_id,
+        turn_seq, and intent_id are all identical, so the key must match.
+        """
+        from pilot.key_schemes import k_intent
+        k_a1 = k_intent("sess-abc", 1, "nav_int_01")
+        k_a2 = k_intent("sess-abc", 1, "nav_int_01")
+        assert k_a1 == k_a2, (
+            "k_intent must be identical for a1 and a2 of the same intent "
+            "(same session_id, turn_seq, intent_id)"
+        )
+
     def test_canonical_serialisation_order(self):
         from pilot.key_schemes import canonical_serialise
         s1 = canonical_serialise({"b": 2, "a": 1})
@@ -180,13 +195,13 @@ class TestKeySchemes:
 class TestBucketSanity:
     def test_bucket_transition_occurs(self):
         from pilot.test_bucket_key import test_bucket_transition
-        # t=100, G=90: floor(100/60)=1, floor(190/60)=3 → transition
-        assert test_bucket_transition(t=100.0, G=90.0, Delta=60.0)
+        # t=100, G=90: floor(100/60)=1, floor(190/60)=3 -> transition
+        test_bucket_transition(t=100.0, G=90.0, Delta=60.0)
 
     def test_same_bucket_no_change(self):
         from pilot.test_bucket_key import test_same_bucket_no_change
-        # t=100, G=10: floor(100/60)=1, floor(110/60)=1 → same bucket
-        assert test_same_bucket_no_change(t=100.0, G=10.0, Delta=60.0)
+        # t=100, G=10: floor(100/60)=1, floor(110/60)=1 -> same bucket
+        test_same_bucket_no_change(t=100.0, G=10.0, Delta=60.0)
 
 
 # =========================================================================

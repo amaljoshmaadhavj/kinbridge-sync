@@ -25,10 +25,11 @@ def test_bucket_transition(
     agent_id: str = "test-agent",
     tool: str = "navigate_to",
     args: dict | None = None,
-) -> bool:
+) -> None:
     """Verify that a bucket transition occurs across the outage gap.
 
-    Returns True if the assertion holds (bucket changes).
+    Preconditions ( caller must ensure ):
+        floor(t / Delta) != floor((t + G) / Delta)
     """
     if args is None:
         args = {"lat": 45.0, "lon": 6.0, "mode": "fastest"}
@@ -42,7 +43,7 @@ def test_bucket_transition(
     print(f"t = {t}s,  G = {G}s,  Delta = {Delta}s")
     print(f"floor(t / Delta)         = {bucket_before}")
     print(f"floor((t + G) / Delta)   = {bucket_after}")
-    print(f"Bucket changed: {bucket_before} → {bucket_after}  (transition: {bucket_before != bucket_after})")
+    print(f"Bucket changed: {bucket_before} -> {bucket_after}  (transition: {bucket_before != bucket_after})")
     print(f"Key before: {key_before}")
     print(f"Key after:  {key_after}")
     print(f"Keys match: {key_before == key_after}")
@@ -59,18 +60,21 @@ def test_bucket_transition(
     print("PASS: Bucket transition assertion holds.")
     print("  This demonstrates the paper's claim that k_bucket mismatches")
     print("  even on identical payloads when G > Delta.")
-    return True
 
 
 def test_same_bucket_no_change(
     t: float = 100.0,
-    G: float = 30.0,
+    G: float = 10.0,
     Delta: float = 60.0,
     agent_id: str = "test-agent",
     tool: str = "navigate_to",
     args: dict | None = None,
-) -> bool:
-    """Verify that a small outage within the same bucket does NOT change the key."""
+) -> None:
+    """Verify that an outage fully contained in one bucket does NOT change the key.
+
+    Preconditions ( caller must ensure ):
+        floor(t / Delta) == floor((t + G) / Delta)
+    """
     if args is None:
         args = {"lat": 45.0, "lon": 6.0, "mode": "fastest"}
 
@@ -80,7 +84,7 @@ def test_same_bucket_no_change(
     key_before = k_bucket(agent_id, tool, args, t, Delta)
     key_after = k_bucket(agent_id, tool, args, t + G, Delta)
 
-    print(f"t = {t}s,  G = {G}s,  Delta = {Delta}s  (G < Delta, same bucket expected)")
+    print(f"t = {t}s,  G = {G}s,  Delta = {Delta}s")
     print(f"floor(t / Delta)       = {bucket_before}")
     print(f"floor((t + G) / Delta) = {bucket_after}")
     print(f"Bucket changed: {bucket_before != bucket_after}")
@@ -94,25 +98,19 @@ def test_same_bucket_no_change(
     assert key_before == key_after, "Expected same keys within same bucket"
 
     print("PASS: Same-bucket consistency holds.")
-    return True
 
 
 def main() -> None:
     print("=" * 70)
-    print("BUCKET KEY SANITY CHECK — deterministic mathematical test")
+    print("BUCKET KEY SANITY CHECK -- deterministic mathematical test")
     print("=" * 70)
     print()
 
-    ok1 = test_bucket_transition()
+    test_bucket_transition()
     print()
-    ok2 = test_same_bucket_no_change()
+    test_same_bucket_no_change()
 
-    if ok1 and ok2:
-        print("\nAll assertions passed.")
-        sys.exit(0)
-    else:
-        print("\nSome assertions failed!")
-        sys.exit(1)
+    print("\nAll assertions passed.")
 
 
 if __name__ == "__main__":

@@ -168,8 +168,8 @@ def run_single_prompt(
     kb_a1 = k_bucket(agent_id, a1_tool, a1_args, timestamp_a1, bucket_delta_s) if tc_a1 else ""
     kb_a2 = k_bucket(agent_id, a2_tool, a2_args, timestamp_a2, bucket_delta_s) if tc_a2 else ""
 
-    ki_a1 = k_intent(session_id, 1, intent_id)   # turn_seq=1 for both (same ground truth)
-    ki_a2 = k_intent(session_id, 2, intent_id)   # turn_seq=2 for the re-issue
+    ki_a1 = k_intent(session_id, 1, intent_id)   # turn_seq=1 (same intent, same turn)
+    ki_a2 = k_intent(session_id, 1, intent_id)   # turn_seq=1 (re-issue of same intent)
 
     # --- Semantic similarity -----------------------------------------------
     if tc_a1 and tc_a2:
@@ -180,11 +180,7 @@ def run_single_prompt(
     # --- Mismatch flags ----------------------------------------------------
     mismatch_payload = int(kp_a1 != kp_a2) if (tc_a1 and tc_a2) else -1
     mismatch_bucket  = int(kb_a1 != kb_a2) if (tc_a1 and tc_a2) else -1
-    # Intent key: turn_seq differs by construction, so we test the *tool+args*
-    # portion — for the intent scheme the key MUST match by design.
-    # The mismatch test here is whether the intent key is the same when
-    # we fix intent_id (it should always be, since intent_id is ground truth).
-    mismatch_intent  = 0  # by construction: same intent_id → same key base
+    mismatch_intent  = int(ki_a1 != ki_a2) if (tc_a1 and tc_a2) else -1
 
     # --- Build observation --------------------------------------------------
     observation = {
