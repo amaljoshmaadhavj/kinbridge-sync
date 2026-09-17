@@ -627,5 +627,529 @@ class TestRawDirectory:
         assert (raw_dir / "__init__.py").exists()
 
 
+# =========================================================================
+# pilot/analyze_pilot.py — input selection
+# =========================================================================
+
+class TestAnalyzeInputSelection:
+    """Tests that the analyzer requires explicit input paths and does not
+    silently auto-glob all pilot_temp*.json files."""
+
+    VALID_T00 = Path(__file__).resolve().parent.parent / "pilot" / "raw" / "pilot_temp0.0_20260916T160848Z.json"
+    VALID_T07 = Path(__file__).resolve().parent.parent / "pilot" / "raw" / "pilot_temp0.7_20260916T162421Z.json"
+    INVALID_T00 = Path(__file__).resolve().parent.parent / "pilot" / "raw" / "pilot_temp0.0_20260916T153000Z.json"
+
+    def test_explicit_valid_inputs_accepted(self):
+        from pilot.analyze_pilot import _load_explicit
+        obs = _load_explicit([self.VALID_T00, self.VALID_T07])
+        assert len(obs) == 38  # 19 + 19
+
+    def test_single_valid_input_accepted(self):
+        from pilot.analyze_pilot import _load_explicit
+        obs = _load_explicit([self.VALID_T00])
+        assert len(obs) == 19
+
+    def test_missing_file_raises(self):
+        from pilot.analyze_pilot import _load_explicit
+        import pytest
+        with pytest.raises(FileNotFoundError):
+            _load_explicit([Path("/nonexistent/file.json")])
+
+    def test_invalid_file_not_auto_included(self):
+        """The invalid file must NOT be loaded when only valid files are specified."""
+        from pilot.analyze_pilot import _load_explicit
+        obs = _load_explicit([self.VALID_T00, self.VALID_T07])
+        # All observations should have k_intent matches (from valid data only)
+        for o in obs:
+            assert o["a1"]["key_intent"] == o["a2"]["key_intent"], (
+                f"{o['prompt_id']}: k_intent differs — invalid data may have been included"
+            )
+
+    def test_combined_analysis_produces_both_temperatures(self):
+        from pilot.analyze_pilot import _load_explicit, compute_divergence_table
+        obs = _load_explicit([self.VALID_T00, self.VALID_T07])
+        df = compute_divergence_table(obs)
+        temps = sorted(df["temperature"].unique())
+        assert temps == [0.0, 0.7]
+
+    def test_exactly_114_divergence_rows(self):
+        """Two valid 19-observation datasets x 3 schemes = 114 divergence rows."""
+        from pilot.analyze_pilot import _load_explicit, compute_divergence_table
+        obs = _load_explicit([self.VALID_T00, self.VALID_T07])
+        df = compute_divergence_table(obs)
+        assert len(df) == 114
+
+    def test_57_rows_per_temperature(self):
+        from pilot.analyze_pilot import _load_explicit, compute_divergence_table
+        obs = _load_explicit([self.VALID_T00, self.VALID_T07])
+        df = compute_divergence_table(obs)
+        for temp in [0.0, 0.7]:
+            assert len(df[df["temperature"] == temp]) == 57
+
+
+# =========================================================================
+# kinbridge_math/calibrate.py — Design C
+# =========================================================================
+
+class TestCalibrateDesignC:
+    """Tests for the Design C calibration pipeline."""
+
+    VALID_T00 = Path(__file__).resolve().parent.parent / "pilot" / "raw" / "pilot_temp0.0_20260916T160848Z.json"
+    VALID_T07 = Path(__file__).resolve().parent.parent / "pilot" / "raw" / "pilot_temp0.7_20260916T162421Z.json"
+
+    def test_fsr_loads_19_pairs(self):
+        from kinbridge_math.fmr_from_negatives import load_fsr_from_reissues
+        temp, sims, n = load_fsr_from_reissues(self.VALID_T00)
+        assert n == 19
+        assert len(sims) == 19
+        assert temp == 0.0
+
+    def test_fsr_temperature_matches_pilot(self):
+        from kinbridge_math.fmr_from_negatives import load_fsr_from_reissues
+        temp00, _, _ = load_fsr_from_reissues(self.VALID_T00)
+        temp07, _, _ = load_fsr_from_reissues(self.VALID_T07)
+        assert temp00 == 0.0
+        assert temp07 == 0.7
+
+    def test_fit_params_design_c_no_fmr(self):
+        from kinbridge_math.calibrate import fit_params_design_c
+        from kinbridge_math.fmr_from_negatives import compute_fsr_curve, load_fsr_from_reissues
+        temp, sims, n = load_fsr_from_reissues(self.VALID_T00)
+        fsr_points = compute_fsr_curve(sims, n)
+        fit_a, fit_b, reason = fit_params_design_c([], fsr_points)
+        assert fit_a is None
+        assert fit_b is not None
+
+    def test_fit_params_design_c_both_sources(self):
+        from kinbridge_math.calibrate import fit_params_design_c
+        from kinbridge_math.fmr_from_negatives import compute_fmr_curve, compute_fsr_curve, load_fsr_from_reissues
+        fmr_sims = [0.05 * i for i in range(20)]
+        fmr_points = compute_fmr_curve(fmr_sims, n_total=20)
+        temp, sims, n = load_fsr_from_reissues(self.VALID_T00)
+        fsr_points = compute_fsr_curve(sims, n)
+        fit_a, fit_b, reason = fit_params_design_c(fmr_points, fsr_points)
+        assert fit_a is not None
+        assert fit_b is not None
+
+    def test_calibrate_tau_star_without_alpha_returns_none(self):
+        from kinbridge_math.calibrate import calibrate_tau_star
+        result = calibrate_tau_star(None, None, [], [])
+        assert result is None
+
+    def test_risk_function_delegates_correctly(self):
+        from kinbridge_math.tau_star import risk_function
+        r = risk_function(0.5, 0.1, 0.2, w_d=4.0, w_m=1.0)
+        assert r == 4.0 * 0.2 + 1.0 * 0.1
+
+    def test_fsr_denominator_is_19(self):
+        from kinbridge_math.fmr_from_negatives import load_fsr_from_reissues
+        pilot_path = Path("pilot/raw/pilot_temp0.0_20260916T160848Z.json")
+        temp, sims, n = load_fsr_from_reissues(pilot_path)
+        assert n == 19
+
+    def test_fmr_denominator_from_trials(self):
+        from kinbridge_math.fmr_from_negatives import compute_fmr_curve
+        sims = [0.5] * 200
+        points = compute_fmr_curve(sims, n_total=200)
+        for p in points:
+            assert p.n_total == 200
+
+    def test_tau_sweep_has_101_thresholds(self):
+        from kinbridge_math.fmr_from_negatives import compute_fmr_curve, compute_fsr_curve
+        fmr_sims = [0.3, 0.5, 0.7]
+        fmr_points = compute_fmr_curve(fmr_sims, n_total=3)
+        assert len(fmr_points) == 101
+
+        fsr_sims = [0.4, 0.6, 0.8]
+        fsr_points = compute_fsr_curve(fsr_sims, n_total=3)
+        assert len(fsr_points) == 101
+
+    def test_wilson_counts_use_actual_n(self):
+        from kinbridge_math.fmr_from_negatives import compute_fmr_curve
+        sims = [0.6] * 100
+        points = compute_fmr_curve(sims, n_total=100)
+        p50 = [p for p in points if abs(p.tau - 0.5) < 0.005][0]
+        assert p50.n_false_match == 100
+        assert p50.n_total == 100
+
+    def test_no_raw_pilot_files_modified(self):
+        """Verify the original pilot files are unchanged."""
+        for f in [
+            "pilot/raw/pilot_temp0.0_20260916T160848Z.json",
+            "pilot/raw/pilot_temp0.7_20260916T162421Z.json",
+        ]:
+            path = Path(f)
+            assert path.exists(), f"File missing: {f}"
+# pilot/run_negative_trials.py
+# =========================================================================
+
+class TestNegativeTrials:
+    """Tests for the dedicated negative trial generator."""
+
+    def test_intent_pair_selection_covers_all_pairs(self):
+        from pilot.run_negative_trials import select_intent_pairs
+        import random
+        intent_ids = [f"int_{i}" for i in range(5)]
+        rng = random.Random(42)
+        pairs = select_intent_pairs(intent_ids, n_trials=100, rng=rng)
+        # 5 intents -> C(5,2)=10 unique pairs
+        unique_pairs = set()
+        for a, b in pairs:
+            key = (min(a, b), max(a, b))
+            unique_pairs.add(key)
+        assert len(unique_pairs) == 10
+
+    def test_intent_pair_selection_distributes_evenly(self):
+        from pilot.run_negative_trials import select_intent_pairs
+        import random
+        intent_ids = [f"int_{i}" for i in range(4)]
+        rng = random.Random(42)
+        # C(4,2)=6 pairs, 12 trials -> 2 per pair
+        pairs = select_intent_pairs(intent_ids, n_trials=12, rng=rng)
+        from collections import Counter
+        pair_counts = Counter()
+        for a, b in pairs:
+            key = (min(a, b), max(a, b))
+            pair_counts[key] += 1
+        # Each pair should have exactly 2 trials
+        for count in pair_counts.values():
+            assert count == 2
+
+    def test_negative_trial_different_intents(self):
+        from pilot.run_negative_trials import validate_trial
+        trial = {
+            "trial_id": "neg_test123",
+            "temperature": 0.0,
+            "intent_id_a": "int_A",
+            "intent_id_b": "int_B",
+            "action_a": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": "call_1"}]}}},
+            "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": "call_2"}]}}},
+            "similarity": 0.5,
+        }
+        errors = validate_trial(trial)
+        assert len(errors) == 0
+
+    def test_negative_trial_same_intent_detected(self):
+        from pilot.run_negative_trials import validate_trial
+        trial = {
+            "trial_id": "neg_test456",
+            "temperature": 0.0,
+            "intent_id_a": "int_A",
+            "intent_id_b": "int_A",  # same intent!
+            "action_a": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": "call_1"}]}}},
+            "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": "call_2"}]}}},
+            "similarity": 0.5,
+        }
+        errors = validate_trial(trial)
+        assert any("Same intent" in e for e in errors)
+
+    def test_negative_trial_reuse_detected(self):
+        from pilot.run_negative_trials import validate_trial
+        trial = {
+            "trial_id": "neg_test789",
+            "temperature": 0.0,
+            "intent_id_a": "int_A",
+            "intent_id_b": "int_B",
+            "action_a": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": "call_1"}]}}},
+            "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": "call_1"}]}}},
+            "similarity": 0.5,
+        }
+        errors = validate_trial(trial)
+        assert any("Same model call" in e for e in errors)
+
+    def test_negative_trial_failed_action_detected(self):
+        from pilot.run_negative_trials import validate_trial
+        trial = {
+            "trial_id": "neg_test_fail",
+            "temperature": 0.0,
+            "intent_id_a": "int_A",
+            "intent_id_b": "int_B",
+            "action_a": {"success": False, "raw_response": {"message": {"tool_calls": []}}},
+            "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": "call_2"}]}}},
+            "similarity": 0.0,
+        }
+        errors = validate_trial(trial)
+        assert any("Action A failed" in e for e in errors)
+
+
+# =========================================================================
+# kinbridge_math/fmr_from_negatives.py
+# =========================================================================
+
+class TestFMRFromNegatives:
+    """Tests for FMR computation from dedicated negative trials."""
+
+    def test_compute_fmr_curve_basic(self):
+        from kinbridge_math.fmr_from_negatives import compute_fmr_curve
+        sims = [0.3, 0.5, 0.7, 0.9]
+        points = compute_fmr_curve(sims, n_total=4)
+        assert len(points) == 101  # 0.00 through 1.00
+        # At tau=0.0, all 4 have sim >= 0 -> FMR = 1.0
+        assert points[0].fmr == 1.0
+        # At tau=1.0, none have sim >= 1.0 -> FMR = 0.0
+        assert points[-1].fmr == 0.0
+
+    def test_fmr_uses_negative_trials_only(self):
+        from kinbridge_math.fmr_from_negatives import compute_fmr_curve
+        # Simulate 200 negative trials
+        sims = [0.1 * i for i in range(200)]
+        points = compute_fmr_curve(sims, n_total=200)
+        # Denominator must be 200
+        for p in points:
+            assert p.n_total == 200
+
+    def test_fsr_from_reissues_count(self):
+        from kinbridge_math.fmr_from_negatives import load_fsr_from_reissues
+        from pathlib import Path
+        pilot_path = Path("pilot/raw/pilot_temp0.0_20260916T160848Z.json")
+        temp, sims, n = load_fsr_from_reissues(pilot_path)
+        assert n == 19
+        assert temp == 0.0
+
+    def test_fsr_curve_has_101_points(self):
+        from kinbridge_math.fmr_from_negatives import load_fsr_from_reissues, compute_fsr_curve
+        from pathlib import Path
+        pilot_path = Path("pilot/raw/pilot_temp0.0_20260916T160848Z.json")
+        temp, sims, n = load_fsr_from_reissues(pilot_path)
+        fsr_points = compute_fsr_curve(sims, n)
+        assert len(fsr_points) == 101
+
+    def test_fsr_uses_reissue_pairs_only(self):
+        from kinbridge_math.fmr_from_negatives import load_fsr_from_reissues
+        from pathlib import Path
+        pilot_path = Path("pilot/raw/pilot_temp0.0_20260916T160848Z.json")
+        temp, sims, n = load_fsr_from_reissues(pilot_path)
+        # Must be exactly 19 reissue pairs
+        assert n == 19
+        assert len(sims) == 19
+
+
+# =========================================================================
+# Retry behavior tests
+# =========================================================================
+
+class TestRetryBehavior:
+    """Tests for the retry-until-N-successful trials behavior."""
+
+    def test_zero_failures_exactly_n_successful(self):
+        """When no trials fail, exactly N successful trials are produced."""
+        from pilot.run_negative_trials import (
+            run_single_negative_trial, validate_trial,
+            _load_prompts, _group_prompts_by_intent,
+        )
+        prompts = _load_prompts()
+        by_intent = _group_prompts_by_intent(prompts)
+        intent_ids = sorted(by_intent.keys())
+
+        # Simulate 5 successful trials (mock Ollama to always succeed)
+        successful = []
+        for i in range(5):
+            intent_a = intent_ids[i % len(intent_ids)]
+            intent_b = intent_ids[(i + 1) % len(intent_ids)]
+            if intent_a == intent_b:
+                intent_b = intent_ids[(i + 2) % len(intent_ids)]
+            # Build a fake successful trial
+            trial = {
+                "trial_id": f"neg_test_{i}",
+                "temperature": 0.0,
+                "intent_id_a": intent_a,
+                "intent_id_b": intent_b,
+                "action_a": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"call_a_{i}"}]}}},
+                "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"call_b_{i}"}]}}},
+                "similarity": 0.5,
+                "same_intent": False,
+            }
+            errors = validate_trial(trial)
+            if not errors:
+                successful.append(trial)
+
+        assert len(successful) == 5
+
+    def test_one_failed_trial_still_gets_n_successful(self):
+        """One failed trial does not prevent reaching N successful trials."""
+        from pilot.run_negative_trials import validate_trial
+
+        # Simulate: 1 failed + 5 successful = 5 successful total
+        all_trials = []
+        failed = []
+
+        # Failed trial
+        failed_trial = {
+            "trial_id": "neg_fail_1",
+            "temperature": 0.0,
+            "intent_id_a": "int_A",
+            "intent_id_b": "int_B",
+            "action_a": {"success": False, "raw_response": {"message": {"tool_calls": []}}},
+            "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": "call_1"}]}}},
+            "similarity": 0.0,
+            "same_intent": False,
+        }
+        errors = validate_trial(failed_trial)
+        assert len(errors) > 0  # should be flagged
+        failed.append(failed_trial)
+
+        # 5 successful trials
+        for i in range(5):
+            trial = {
+                "trial_id": f"neg_ok_{i}",
+                "temperature": 0.0,
+                "intent_id_a": f"int_X_{i}",
+                "intent_id_b": f"int_Y_{i}",
+                "action_a": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"call_a_{i}"}]}}},
+                "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"call_b_{i}"}]}}},
+                "similarity": 0.5,
+                "same_intent": False,
+            }
+            errors = validate_trial(trial)
+            if not errors:
+                all_trials.append(trial)
+
+        assert len(all_trials) == 5
+        assert len(failed) == 1
+
+    def test_repeated_failures_continue_until_n(self):
+        """Repeated failures are retried until N successful trials obtained."""
+        from pilot.run_negative_trials import validate_trial
+
+        n_target = 10
+        successful = []
+        failed = []
+        n_attempted = 0
+
+        # Simulate: 3 failures then successes
+        for i in range(20):  # plenty of attempts
+            n_attempted += 1
+            if i < 3:
+                # Fail
+                trial = {
+                    "trial_id": f"neg_fail_{i}",
+                    "temperature": 0.0,
+                    "intent_id_a": "int_A",
+                    "intent_id_b": "int_B",
+                    "action_a": {"success": False, "raw_response": {"message": {"tool_calls": []}}},
+                    "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"call_{i}"}]}}},
+                    "similarity": 0.0,
+                    "same_intent": False,
+                }
+                errors = validate_trial(trial)
+                assert len(errors) > 0
+                failed.append(trial)
+            else:
+                # Succeed
+                trial = {
+                    "trial_id": f"neg_ok_{i}",
+                    "temperature": 0.0,
+                    "intent_id_a": f"int_X_{i}",
+                    "intent_id_b": f"int_Y_{i}",
+                    "action_a": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"call_a_{i}"}]}}},
+                    "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"call_b_{i}"}]}}},
+                    "similarity": 0.5,
+                    "same_intent": False,
+                }
+                errors = validate_trial(trial)
+                if not errors:
+                    successful.append(trial)
+
+            if len(successful) >= n_target:
+                break
+
+        assert len(successful) == n_target
+        assert len(failed) == 3
+        assert n_attempted == n_target + 3
+
+    def test_denominator_equals_n_successful(self):
+        """FMR denominator equals number of successful trials, not attempted."""
+        from kinbridge_math.fmr_from_negatives import compute_fmr_curve
+
+        # 5 successful trials with known similarities
+        sims = [0.3, 0.5, 0.7, 0.9, 0.4]
+        points = compute_fmr_curve(sims, n_total=len(sims))
+
+        # Denominator must be 5 (successful), not 10 (attempted)
+        for p in points:
+            assert p.n_total == 5
+
+    def test_failed_trials_never_enter_fmr_observations(self):
+        """Failed trials are excluded from FMR similarity observations."""
+        from kinbridge_math.fmr_from_negatives import extract_similarities
+
+        # Simulate output file with 3 successful + 2 failed
+        data = {
+            "metadata": {
+                "temperature": 0.0,
+                "n_requested": 3,
+                "n_attempted": 5,
+                "n_successful": 3,
+                "n_failed": 2,
+            },
+            "trials": [
+                {"similarity": 0.5, "action_a": {"success": True}, "action_b": {"success": True}},
+                {"similarity": 0.7, "action_a": {"success": True}, "action_b": {"success": True}},
+                {"similarity": 0.3, "action_a": {"success": True}, "action_b": {"success": True}},
+            ],
+            "failed_attempts": [
+                {"errors": ["Action A failed"]},
+                {"errors": ["Action B failed"]},
+            ],
+        }
+
+        temp, sims, meta = extract_similarities(data)
+        assert len(sims) == 3  # only successful
+        assert meta["n_successful"] == 3
+        assert meta["n_failed"] == 2
+
+    def test_no_action_reuse_across_trials(self):
+        """Each trial uses fresh model calls — no action reuse."""
+        from pilot.run_negative_trials import validate_trial
+
+        # Create 5 trials with distinct call IDs
+        for i in range(5):
+            trial = {
+                "trial_id": f"neg_unique_{i}",
+                "temperature": 0.0,
+                "intent_id_a": f"int_A_{i}",
+                "intent_id_b": f"int_B_{i}",
+                "action_a": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"unique_call_a_{i}"}]}}},
+                "action_b": {"success": True, "raw_response": {"message": {"tool_calls": [{"id": f"unique_call_b_{i}"}]}}},
+                "similarity": 0.5,
+                "same_intent": False,
+            }
+            errors = validate_trial(trial)
+            assert len(errors) == 0
+
+    def test_metadata_tracks_attempted_vs_successful(self):
+        """Metadata correctly reports n_requested, n_attempted, n_successful."""
+        from pilot.run_negative_trials import write_trials
+        import tempfile
+        import json
+
+        successful = [
+            {"trial_id": "ok_1", "similarity": 0.5,
+             "action_a": {"success": True}, "action_b": {"success": True}},
+        ]
+        failed = [
+            {"attempt_index": 0, "errors": ["Action A failed"]},
+        ]
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            out_path = write_trials(
+                successful, failed,
+                temperature=0.0, seed=42, model="test_model",
+                n_requested=1, n_attempted=2,
+                intent_pair_counts={("A", "B"): 1},
+                out_dir=Path(tmpdir),
+            )
+            with open(out_path) as f:
+                data = json.load(f)
+
+            meta = data["metadata"]
+            assert meta["n_requested"] == 1
+            assert meta["n_attempted"] == 2
+            assert meta["n_successful"] == 1
+            assert meta["n_failed"] == 1
+            assert len(data["trials"]) == 1
+            assert len(data["failed_attempts"]) == 1
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

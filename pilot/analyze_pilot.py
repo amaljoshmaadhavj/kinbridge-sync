@@ -1,18 +1,19 @@
 """
 Phase 1 analysis — Table II generation and decision rule.
 
-Reads ONLY measured experiment output from pilot/raw/*.json.
+Reads explicitly specified experiment output JSON files.
 Computes per-(scheme, temperature) divergence rate + Wilson 95 % CI.
 Applies the paper's decision rule.
 
 Usage:
-    python -m pilot.analyze_pilot [--input pilot/raw/pilot_temp0.0_*.json]
+    python -m pilot.analyze_pilot --input pilot/raw/file1.json pilot/raw/file2.json
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -30,10 +31,15 @@ def _load_observations(raw_path: Path) -> list[dict[str, Any]]:
     return data["observations"]
 
 
-def _load_all_observations() -> list[dict[str, Any]]:
-    """Load all raw observation files from pilot/raw/."""
+def _load_explicit(paths: list[Path]) -> list[dict[str, Any]]:
+    """Load observations from explicitly specified files.
+
+    Raises FileNotFoundError if any path does not exist.
+    """
     obs: list[dict[str, Any]] = []
-    for p in sorted(_RAW_DIR.glob("pilot_temp*.json")):
+    for p in paths:
+        if not p.exists():
+            raise FileNotFoundError(f"Input file not found: {p}")
         obs.extend(_load_observations(p))
     return obs
 
@@ -142,14 +148,12 @@ def print_decision_rules(df_summary: pd.DataFrame) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Analyze Phase 1 pilot results")
-    parser.add_argument("--input", type=str, default=None,
-                        help="Path to a specific raw JSON file (default: all in pilot/raw/)")
+    parser.add_argument("--input", type=str, nargs="+", required=True,
+                        help="One or more raw JSON files to analyze (required)")
     args = parser.parse_args()
 
-    if args.input:
-        obs = _load_observations(Path(args.input))
-    else:
-        obs = _load_all_observations()
+    input_paths = [Path(p) for p in args.input]
+    obs = _load_explicit(input_paths)
 
     if not obs:
         print("No observations found. Run `python -m pilot.run_pilot` first.")
