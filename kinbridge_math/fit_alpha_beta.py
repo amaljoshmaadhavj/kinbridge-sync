@@ -1,13 +1,13 @@
 """
 Fit alpha and beta from measured FMR/FSR data (Phase 16A-B).
 
-The paper's power-law approximation:
-  FSR(tau) ≈ (1 - tau)^beta
-  FMR(tau) ≈ tau^alpha
+Corrected power-law approximation (2026-09-18):
+  FSR(tau) ≈ tau^beta          [FSR is increasing in tau]
+  FMR(tau) ≈ (1 - tau)^alpha   [FMR is decreasing in tau]
 
 Taking logs:
-  log(FSR) = beta * log(1 - tau) + const
-  log(FMR) = alpha * log(tau) + const
+  log(FSR) = beta * log(tau) + const
+  log(FMR) = alpha * log(1 - tau) + const
 
 We fit these via linear regression on the non-zero, non-one observations.
 """
@@ -48,9 +48,10 @@ def fit_beta(
     fsr_values: np.ndarray,
     min_valid_points: int = 5,
 ) -> FitResult:
-    """Fit beta from log(FSR) vs log(1 - tau).
+    """Fit beta from log(FSR) vs log(tau).
 
-    Excludes points where FSR <= 0 or tau >= 1 (log domain violations).
+    Model: FSR(tau) ≈ tau^beta
+    Excludes points where FSR <= 0 or tau <= 0 (log domain violations).
 
     Args:
         tau_values:       Array of threshold values.
@@ -63,8 +64,8 @@ def fit_beta(
     tau = np.asarray(tau_values, dtype=float)
     fsr = np.asarray(fsr_values, dtype=float)
 
-    # Filter: FSR > 0 and tau < 1 (so 1-tau > 0)
-    valid = (fsr > 0) & (tau < 1.0)
+    # Filter: FSR > 0 and tau > 0 (so log(tau) is defined)
+    valid = (fsr > 0) & (tau > 0.0)
     n_excluded = int(np.sum(~valid))
 
     if np.sum(valid) < min_valid_points:
@@ -73,7 +74,7 @@ def fit_beta(
             f"(need {min_valid_points}). Fit may be unreliable."
         )
 
-    log_tau = np.log(1.0 - tau[valid])
+    log_tau = np.log(tau[valid])
     log_fsr = np.log(fsr[valid])
 
     slope, intercept, r_value, _, _ = stats.linregress(log_tau, log_fsr)
@@ -93,9 +94,10 @@ def fit_alpha(
     fmr_values: np.ndarray,
     min_valid_points: int = 5,
 ) -> FitResult:
-    """Fit alpha from log(FMR) vs log(tau).
+    """Fit alpha from log(FMR) vs log(1 - tau).
 
-    Excludes points where FMR <= 0 or tau <= 0 (log domain violations).
+    Model: FMR(tau) ≈ (1 - tau)^alpha
+    Excludes points where FMR <= 0 or tau >= 1 (log domain violations).
 
     Args:
         tau_values:       Array of threshold values.
@@ -108,8 +110,8 @@ def fit_alpha(
     tau = np.asarray(tau_values, dtype=float)
     fmr = np.asarray(fmr_values, dtype=float)
 
-    # Filter: FMR > 0 and tau > 0
-    valid = (fmr > 0) & (tau > 0.0)
+    # Filter: FMR > 0 and tau < 1 (so 1-tau > 0)
+    valid = (fmr > 0) & (tau < 1.0)
     n_excluded = int(np.sum(~valid))
 
     if np.sum(valid) < min_valid_points:
@@ -118,10 +120,10 @@ def fit_alpha(
             f"(need {min_valid_points}). Fit may be unreliable."
         )
 
-    log_tau = np.log(tau[valid])
+    log_one_minus_tau = np.log(1.0 - tau[valid])
     log_fmr = np.log(fmr[valid])
 
-    slope, intercept, r_value, _, _ = stats.linregress(log_tau, log_fmr)
+    slope, intercept, r_value, _, _ = stats.linregress(log_one_minus_tau, log_fmr)
 
     return FitResult(
         slope=slope,

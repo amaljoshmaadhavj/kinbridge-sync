@@ -1,5 +1,11 @@
 """
-Phase 1b calibration pipeline — Algorithm 2 (tau-star) from pilot data.
+Phase 1b calibration pipeline -- Algorithm 2 (tau-star) from pilot data.
+
+Corrected formulation (2026-09-18):
+  FSR(tau) ≈ tau^beta           [increasing in tau]
+  FMR(tau) ≈ (1 - tau)^alpha    [decreasing in tau]
+
+  R(tau) = w_d * tau^beta + w_m * (1-tau)^alpha + w_s * P_stale
 
 Design C data sources:
   - FSR: 19 original same-observation a1<->a2 reissue pairs from pilot
@@ -201,9 +207,13 @@ def analyze_temperature_design_c(
     # Fit alpha and beta
     fit_a, fit_b, limitation_reason = fit_params_design_c(fmr_points, fsr_points)
 
-    cannot_alpha = fit_a is None
-    cannot_beta = fit_b is None
-    cannot_tau_star = fit_a is None or fit_b is None
+    cannot_alpha = fit_a is None or fit_a.n_observations == 0
+    cannot_beta = fit_b is None or fit_b.n_observations == 0
+    cannot_tau_star = (
+        fit_a is None or fit_b is None
+        or fit_a.n_observations == 0 or fit_b.n_observations == 0
+        or not np.isfinite(fit_a.slope) or not np.isfinite(fit_b.slope)
+    )
 
     # Tau-star calibration
     tau_result = calibrate_tau_star(fit_a, fit_b, fmr_points, fsr_points, w_d, w_m)

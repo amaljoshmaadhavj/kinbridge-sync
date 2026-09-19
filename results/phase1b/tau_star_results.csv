@@ -1,0 +1,3 @@
+temperature,tau_star,alpha,beta,method_used,risk_at_tau_star,w_d,w_m
+0.0,,1.6650003457610991,,unestimable,,4.0,1.0
+0.7,0.5051826557580381,1.5912776843750946,5.439500997252849,bisection,0.33425199790111204,4.0,1.0

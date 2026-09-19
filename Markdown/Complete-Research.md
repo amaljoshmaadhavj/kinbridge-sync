@@ -111,21 +111,44 @@ Plain English: turn the similarity threshold τ up and you catch more true match
 
 ### 3.5 Risk-minimization threshold (the paper's main "novel formula")
 $$R(\tau) = w_d \cdot \text{FSR}(\tau) + w_m \cdot \text{FMR}(\tau) + w_s \cdot P_{\text{stale}}$$
-With the curvature-aware approximation $\text{FSR}(\tau)\approx(1-\tau)^\beta$, $\text{FMR}(\tau)\approx\tau^\alpha$:
-$$\tau^\star = \left(1 + \left(\frac{w_d\beta}{w_m\alpha}\right)^{\frac{1}{\alpha-1}}\right)^{-1}\left(\frac{w_d\beta}{w_m\alpha}\right)^{\frac{1}{\alpha-1}} \quad \text{(valid when } \alpha=\beta\text{)}$$
+With the curvature-aware approximation $\text{FSR}(\tau)\approx\tau^\beta$, $\text{FMR}(\tau)\approx(1-\tau)^\alpha$:
 
-**Lemma 1 (uniqueness — the extension that covers the general case, α≠β):**
-$$R''(\tau) = w_d\beta(\beta-1)(1-\tau)^{\beta-2} + w_m\alpha(\alpha-1)\tau^{\alpha-2} \geq 0 \text{ on } (0,1)$$
-so $R$ is strictly convex; since $R'(0^+) = -w_d\beta<0$ and $R'(1^-)=w_m\alpha>0$, there is exactly one root — the global minimum, guaranteed.
+> **Correction note (2026-09-18):** The original formulation used
+> $\text{FSR}(\tau)\approx(1-\tau)^\beta$ and $\text{FMR}(\tau)\approx\tau^\alpha$.
+> Those models describe functions with the *opposite* monotonic direction
+> from the empirical definitions in §3.4 (FSR is increasing in τ, FMR is
+> decreasing). The corrected models $\text{FSR}\approx\tau^\beta$,
+> $\text{FMR}\approx(1-\tau)^\alpha$ directly fit the measured curves and
+> preserve their observed directions. No experimental data were altered.
+
+$$R(\tau) = w_d \cdot \tau^\beta + w_m \cdot (1-\tau)^\alpha + w_s \cdot P_{\text{stale}}$$
+
+$$R'(\tau) = w_d \beta \tau^{\beta-1} - w_m \alpha (1-\tau)^{\alpha-1}$$
+
+For the special case $\alpha = \beta$, setting $R'(\tau)=0$ and solving:
+
+$$\frac{\tau^{\alpha-1}}{(1-\tau)^{\alpha-1}} = \frac{w_d}{w_m} \implies \frac{\tau}{1-\tau} = \left(\frac{w_d}{w_m}\right)^{\frac{1}{\alpha-1}}$$
+
+Let $\rho = \left(\dfrac{w_d}{w_m}\right)^{\frac{1}{\alpha-1}}$. Then:
+
+$$\tau^\star = \frac{\rho}{1 + \rho} = \frac{1}{1 + \left(\frac{w_m}{w_d}\right)^{\frac{1}{\alpha-1}}} \quad \text{(valid when } \alpha=\beta\text{)}$$
+
+**Lemma 1 (convexity and uniqueness):**
+$$R''(\tau) = w_d\beta(\beta-1)\tau^{\beta-2} + w_m\alpha(\alpha-1)(1-\tau)^{\alpha-2}$$
+
+When $\alpha > 1$ and $\beta > 1$, both terms are non-negative on $(0,1)$, so $R''(\tau) \geq 0$ and $R$ is convex. Under these conditions, $R'(0^+) = +\infty > 0$ and $R'(1^-) = -\infty < 0$, so $R'$ changes sign exactly once — the unique stationary point is the global minimum.
+
+When $\alpha \leq 1$ or $\beta \leq 1$, $R''$ may not be non-negative on $(0,1)$; convexity cannot be assumed and the stationary point (if it exists) requires verification that it is a minimum.
 
 **Algorithm 2 (turns the formula into something you run):**
 ```
 Input: measured (τ_i, FMR_i, FSR_i) triples from the pilot, cost ratio w_d/w_m
-1. Fit β = slope of log(FSR_i) vs log(1-τ_i)      [numpy.polyfit]
-2. Fit α = slope of log(FMR_i) vs log(τ_i)
-3. If |α-β| < 0.05: use the closed form above
+1. Fit β = slope of log(FSR_i) vs log(τ_i)              [numpy.polyfit]
+2. Fit α = slope of log(FMR_i) vs log(1-τ_i)
+3. If |α-β| < 0.05: use the closed form τ* = ρ/(1+ρ)
+   where ρ = (w_d/w_m)^(1/(α-1))
 4. Else: bisect on R'(τ)=0 over [0.001, 0.999] for ~40 iterations
-         (guaranteed to converge — Lemma 1 proves R' is monotonic)
+         (guaranteed to converge when α>1 and β>1 — Lemma 1)
 5. Return τ*, α, β
 ```
 
@@ -194,8 +217,8 @@ Create calibrate.py implementing Algorithm 2:
 1. Read pilot_results.csv, bucket mismatches by similarity-threshold-
    equivalent tau (use the semantic-equivalence normalizer's score as tau
    for each pair, not just a fixed value).
-2. Fit beta = numpy.polyfit(log(1-tau), log(FSR), 1)[0] per tool class.
-3. Fit alpha = numpy.polyfit(log(tau), log(FMR), 1)[0] per tool class.
+2. Fit beta = numpy.polyfit(log(tau), log(FSR), 1)[0] per tool class.
+3. Fit alpha = numpy.polyfit(log(1-tau), log(FMR), 1)[0] per tool class.
 4. If abs(alpha-beta) < 0.05: use the closed form for tau_star.
    Else: bisect R'(tau)=0 over [0.001,0.999], 40 iterations.
 5. Print tau_star, alpha, beta per tool class.

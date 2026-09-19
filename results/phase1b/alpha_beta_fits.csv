@@ -1,0 +1,5 @@
+temperature,param,source,slope,intercept,r_squared,n_observations,n_excluded
+0.0,beta,fsr_from_reissues,,,,1,100
+0.0,alpha,fmr_from_dedicated_negatives,1.6650003457610991,0.018085362168373642,0.9536527080558725,95,6
+0.7,beta,fsr_from_reissues,5.439500997252849,-2.4657246506341433,0.20610684998923848,13,88
+0.7,alpha,fmr_from_dedicated_negatives,1.5912776843750946,-0.0013790487925464667,0.9578642846912201,95,6

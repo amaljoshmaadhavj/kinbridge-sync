@@ -1,0 +1,129 @@
+{
+  "metadata": {
+    "design": "C_dedicated_independent_negatives",
+    "weights": {
+      "w_d": 4.0,
+      "w_m": 1.0,
+      "w_s": 0.0,
+      "p_stale": 0.0
+    },
+    "tau_sweep": {
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "n_values": 101
+    },
+    "fsr_source": "19 original a1<->a2 reissue pairs from pilot",
+    "fmr_source": "200 dedicated independent negative trials per temperature"
+  },
+  "temperatures": [
+    {
+      "temperature": 0.0,
+      "pilot_source": "pilot\\raw\\pilot_temp0.0_20260916T160848Z.json",
+      "fmr_source": "results\\raw_fmr\\neg_trials_temp0.0_20260917T150329Z.json",
+      "n_fsr_pairs": 19,
+      "n_fmr_trials": 200,
+      "cannot_estimate_alpha": false,
+      "cannot_estimate_beta": false,
+      "cannot_estimate_tau_star": true,
+      "limitation_reason": "",
+      "fit_beta": {
+        "slope": NaN,
+        "intercept": NaN,
+        "r_squared": NaN,
+        "n_observations": 1,
+        "n_excluded": 100,
+        "param_name": "beta"
+      },
+      "fit_alpha": {
+        "slope": 1.6650003457610991,
+        "intercept": 0.018085362168373642,
+        "r_squared": 0.9536527080558725,
+        "n_observations": 95,
+        "n_excluded": 6,
+        "param_name": "alpha"
+      },
+      "tau_star": {
+        "tau_star": NaN,
+        "alpha": 1.6650003457610991,
+        "beta": NaN,
+        "method_used": "unestimable",
+        "risk_at_tau_star": NaN,
+        "w_d": 4.0,
+        "w_m": 1.0,
+        "w_s": 0.0,
+        "p_stale": 0.0,
+        "fit_alpha": {
+          "slope": 1.6650003457610991,
+          "intercept": 0.018085362168373642,
+          "r_squared": 0.9536527080558725,
+          "n_observations": 95,
+          "n_excluded": 6,
+          "param_name": "alpha"
+        },
+        "fit_beta": {
+          "slope": NaN,
+          "intercept": NaN,
+          "r_squared": NaN,
+          "n_observations": 1,
+          "n_excluded": 100,
+          "param_name": "beta"
+        }
+      }
+    },
+    {
+      "temperature": 0.7,
+      "pilot_source": "pilot\\raw\\pilot_temp0.7_20260916T162421Z.json",
+      "fmr_source": "results\\raw_fmr\\neg_trials_temp0.7_20260917T182052Z.json",
+      "n_fsr_pairs": 19,
+      "n_fmr_trials": 200,
+      "cannot_estimate_alpha": false,
+      "cannot_estimate_beta": false,
+      "cannot_estimate_tau_star": false,
+      "limitation_reason": "",
+      "fit_beta": {
+        "slope": 5.439500997252849,
+        "intercept": -2.4657246506341433,
+        "r_squared": 0.20610684998923848,
+        "n_observations": 13,
+        "n_excluded": 88,
+        "param_name": "beta"
+      },
+      "fit_alpha": {
+        "slope": 1.5912776843750946,
+        "intercept": -0.0013790487925464667,
+        "r_squared": 0.9578642846912201,
+        "n_observations": 95,
+        "n_excluded": 6,
+        "param_name": "alpha"
+      },
+      "tau_star": {
+        "tau_star": 0.5051826557580381,
+        "alpha": 1.5912776843750946,
+        "beta": 5.439500997252849,
+        "method_used": "bisection",
+        "risk_at_tau_star": 0.33425199790111204,
+        "w_d": 4.0,
+        "w_m": 1.0,
+        "w_s": 0.0,
+        "p_stale": 0.0,
+        "fit_alpha": {
+          "slope": 1.5912776843750946,
+          "intercept": -0.0013790487925464667,
+          "r_squared": 0.9578642846912201,
+          "n_observations": 95,
+          "n_excluded": 6,
+          "param_name": "alpha"
+        },
+        "fit_beta": {
+          "slope": 5.439500997252849,
+          "intercept": -2.4657246506341433,
+          "r_squared": 0.20610684998923848,
+          "n_observations": 13,
+          "n_excluded": 88,
+          "param_name": "beta"
+        }
+      }
+    }
+  ]
+}

@@ -408,7 +408,7 @@ class TestFitAlphaBeta:
     def test_fit_alpha_returns_slope(self):
         from kinbridge_math.fit_alpha_beta import fit_alpha
         tau = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
-        fmr = tau ** 2.0  # true alpha = 2
+        fmr = (1.0 - tau) ** 2.0  # true alpha = 2
         result = fit_alpha(tau, fmr)
         assert abs(result.slope - 2.0) < 0.1
         assert result.param_name == "alpha"
@@ -416,7 +416,7 @@ class TestFitAlphaBeta:
     def test_fit_beta_returns_slope(self):
         from kinbridge_math.fit_alpha_beta import fit_beta
         tau = np.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
-        fsr = (1.0 - tau) ** 1.5  # true beta = 1.5
+        fsr = tau ** 1.5  # true beta = 1.5
         result = fit_beta(tau, fsr)
         assert abs(result.slope - 1.5) < 0.1
         assert result.param_name == "beta"
@@ -448,17 +448,25 @@ class TestTauStar:
 
     def test_risk_derivative_sign_change(self):
         from kinbridge_math.tau_star import risk_derivative_from_params
-        # At tau near 0: derivative should be negative (descending)
-        d_lo = risk_derivative_from_params(0.01, alpha=2.0, beta=2.0)
-        # At tau near 1: derivative should be positive (ascending)
-        d_hi = risk_derivative_from_params(0.99, alpha=2.0, beta=2.0)
+        # Corrected: R'(tau) = w_d*beta*tau^(beta-1) - w_m*alpha*(1-tau)^(alpha-1)
+        # At tau near 0: -(1-tau)^(alpha-1) term dominates, derivative is negative
+        d_lo = risk_derivative_from_params(0.01, alpha=2.0, beta=2.0, w_d=4.0, w_m=1.0)
+        # At tau near 1: tau^(beta-1) term dominates, derivative is positive
+        d_hi = risk_derivative_from_params(0.99, alpha=2.0, beta=2.0, w_d=4.0, w_m=1.0)
         assert d_lo < 0
         assert d_hi > 0
 
     def test_bisection_converges(self):
         from kinbridge_math.tau_star import _bisection_tau_star
         tau = _bisection_tau_star(alpha=2.0, beta=2.0, w_d=4.0, w_m=1.0)
+        assert tau is not None
         assert 0.0 < tau < 1.0
+
+    def test_bisection_returns_none_without_sign_change(self):
+        from kinbridge_math.tau_star import _bisection_tau_star
+        # Both derivatives positive (no sign change) -> returns None
+        result = _bisection_tau_star(alpha=0.5, beta=2.0, w_d=1.0, w_m=4.0)
+        assert result is None
 
     def test_closed_form_symmetric(self):
         from kinbridge_math.tau_star import _closed_form_tau_star
@@ -469,8 +477,8 @@ class TestTauStar:
     def test_compute_tau_star_returns_result(self):
         from kinbridge_math.tau_star import compute_tau_star
         tau = np.linspace(0.05, 0.95, 50)
-        fmr = tau ** 2.0
-        fsr = (1.0 - tau) ** 2.0
+        fmr = (1.0 - tau) ** 2.0   # corrected: FMR = (1-tau)^alpha
+        fsr = tau ** 2.0            # corrected: FSR = tau^beta
         result = compute_tau_star(tau, fmr, fsr)
         assert 0.0 < result.tau_star < 1.0
         assert result.method_used in ("closed_form", "bisection")
@@ -478,11 +486,30 @@ class TestTauStar:
     def test_compute_tau_star_different_alpha_beta(self):
         from kinbridge_math.tau_star import compute_tau_star
         tau = np.linspace(0.05, 0.95, 50)
-        fmr = tau ** 3.0   # alpha = 3
-        fsr = (1.0 - tau) ** 1.5  # beta = 1.5
+        fmr = (1.0 - tau) ** 3.0   # corrected: alpha = 3
+        fsr = tau ** 1.5            # corrected: beta = 1.5
         result = compute_tau_star(tau, fmr, fsr, epsilon=0.05)
         assert result.method_used == "bisection"
         assert 0.0 < result.tau_star < 1.0
+
+    def test_compute_tau_star_rejects_nan_alpha(self):
+        from kinbridge_math.tau_star import compute_tau_star
+        tau = np.linspace(0.1, 0.9, 20)
+        fmr = np.full_like(tau, float("nan"))
+        fsr = tau ** 2.0
+        result = compute_tau_star(tau, fmr, fsr)
+        assert result.method_used == "unestimable"
+        assert result.tau_star != result.tau_star  # NaN check
+
+    def test_compute_tau_star_rejects_negative_alpha(self):
+        from kinbridge_math.tau_star import compute_tau_star
+        tau = np.linspace(0.1, 0.9, 20)
+        fmr = (1.0 - tau) ** 2.0
+        fsr = tau ** 2.0
+        # Force negative alpha by passing wrong data shape that produces negative slope
+        bad_fmr = 1.0 / (1.0 - tau)  # This gives alpha = -1 (increasing)
+        result = compute_tau_star(tau, bad_fmr, fsr)
+        assert result.method_used == "unestimable"
 
 
 # =========================================================================
@@ -500,8 +527,8 @@ class TestValidateTau:
             fit_beta=FitResult(2.0, 0.0, 0.99, 10, 0, "beta"),
         )
         tau = np.linspace(0.1, 0.9, 20)
-        fmr = tau ** 2.0
-        fsr = (1.0 - tau) ** 2.0
+        fmr = (1.0 - tau) ** 2.0   # corrected: FMR = (1-tau)^alpha
+        fsr = tau ** 2.0            # corrected: FSR = tau^beta
         points = validate_tau_star(tau, fmr, fsr, mock_result)
         assert len(points) == 20
         assert any(p.is_tau_star for p in points)
