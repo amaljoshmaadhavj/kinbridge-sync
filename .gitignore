@@ -66,4 +66,5 @@ pilot/*.json
 .DS_Store
 Thumbs.db
 
-Markdown
+# Phase 1b calibration results (regenerable)
+results/phase1b/
