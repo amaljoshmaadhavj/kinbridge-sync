@@ -1,0 +1,68 @@
+# ─────────────────────────────────────────────────────────────
+# Kinbridge-Sync — Docker Compose network testbed (Phase 3a)
+# ─────────────────────────────────────────────────────────────
+#
+# Three-service testbed: client, edge-a, edge-b.
+# All services use the validated kinbridge-sync:phase3a image.
+# Edge services run the tool-world FastAPI application.
+#
+# Network-control capabilities (NET_ADMIN, NET_RAW) are provided
+# to edge services for Phase 3 tc/netem and iptables experiments.
+#
+# Redis and replication are NOT included — deferred to Phase 3b.
+
+services:
+  client:
+    image: kinbridge-sync:phase3a
+    container_name: kb-client
+    networks:
+      - kinbridge-net
+    command: >
+      python -c "import time; [time.sleep(60) for _ in iter(int, 1)]"
+    healthcheck:
+      test: ["CMD", "python", "-c", "print('ok')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  edge-a:
+    image: kinbridge-sync:phase3a
+    container_name: kb-edge-a
+    networks:
+      - kinbridge-net
+    ports:
+      - "8000:8000"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - KINBRIDGE_PORT=8000
+    command: uvicorn tool_world.main:app --host 0.0.0.0 --port 8000
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  edge-b:
+    image: kinbridge-sync:phase3a
+    container_name: kb-edge-b
+    networks:
+      - kinbridge-net
+    ports:
+      - "8001:8001"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - KINBRIDGE_PORT=8001
+    command: uvicorn tool_world.main:app --host 0.0.0.0 --port 8001
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  kinbridge-net:
+    driver: bridge

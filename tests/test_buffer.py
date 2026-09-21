@@ -342,3 +342,56 @@ def test_defaults_applied(buf: ActionBuffer):
     assert r["status"] == "PENDING"
     assert r["epoch"] == 0
     assert r["v_pre_spec"] == {}
+
+
+# ---------------------------------------------------------------------------
+# Malformed / truncated JSONL handling
+# ---------------------------------------------------------------------------
+
+def test_truncated_last_line_skips_only_tail(tmp_path: Path):
+    """A truncated last line should not destroy preceding valid records."""
+    path = tmp_path / "wal.jsonl"
+    buf = ActionBuffer(path)
+
+    # Append two valid records
+    buf.append(intent_id="I1", key="k1", tool="navigate_to",
+               args={}, t0=0.0, ttl=0.0)
+    buf.append(intent_id="I2", key="k2", tool="navigate_to",
+               args={}, t0=1.0, ttl=0.0)
+
+    # Manually append a truncated (invalid) third line — no trailing newline
+    with open(path, "a", encoding="utf-8") as f:
+        f.write('{"key":"k3","tool":"navigate_to","args":{}}')
+
+    # Reload: the truncated line is at the end of the file
+    buf2 = ActionBuffer(path)
+    records = buf2.read_all()
+
+    # k1 and k2 must survive; k3 is lost
+    assert len(records) == 2
+    assert records[0]["key"] == "k1"
+    assert records[1]["key"] == "k2"
+
+
+def test_malformed_line_stops_reading(tmp_path: Path):
+    """A malformed line stops reading — subsequent valid records are lost."""
+    path = tmp_path / "wal.jsonl"
+    buf = ActionBuffer(path)
+
+    # Append one valid record
+    buf.append(intent_id="I1", key="k1", tool="navigate_to",
+               args={}, t0=0.0, ttl=0.0)
+
+    # Manually write a malformed line followed by a valid line
+    with open(path, "a", encoding="utf-8") as f:
+        f.write("NOT_JSON\n")
+        f.write('{"intent_id":"I2","key":"k2","tool":"navigate_to",'
+                '"args":{},"t0":1.0,"ttl":0.0,"v_pre_spec":{},'
+                '"status":"PENDING","epoch":0}\n')
+
+    # Reload — break at NOT_JSON means k2 is never loaded
+    buf2 = ActionBuffer(path)
+    records = buf2.read_all()
+
+    assert len(records) == 1
+    assert records[0]["key"] == "k1"

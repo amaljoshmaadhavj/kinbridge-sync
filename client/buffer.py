@@ -62,11 +62,19 @@ class ActionBuffer:
                     try:
                         record = json.loads(line)
                     except json.JSONDecodeError:
-                        # Malformed line: skip silently (conservative).
-                        # The record is lost but the rest of the WAL
-                        # remains intact.  A production system might log
-                        # this; for the research testbed we simply skip.
-                        continue
+                        # Malformed JSON — stop reading.  A truncated
+                        # last line (from a mid-write crash) means
+                        # everything after it is either the merged tail
+                        # of the next write or garbage.  Stopping here
+                        # preserves all valid records before the
+                        # corruption point.
+                        break
+                    # Partial JSON that parsed successfully but is
+                    # missing required fields — also stop.  A truncated
+                    # write may produce valid JSON with fewer fields
+                    # than a complete record written by append().
+                    if not all(k in record for k in ("intent_id", "key", "tool", "args", "t0", "ttl")):
+                        break
                     self._records.append(record)
 
         # Load status index (key → status)

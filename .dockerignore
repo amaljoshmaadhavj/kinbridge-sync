@@ -1,0 +1,59 @@
+# ─────────────────────────────────────────────────────────────
+# Kinbridge-Sync — Docker build context exclusions
+# ─────────────────────────────────────────────────────────────
+
+# Version control
+.git/
+.gitignore
+
+# Python virtual environment
+.venv/
+venv/
+ENV/
+
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# pytest / mypy caches
+.pytest_cache/
+.mypy_cache/
+
+# Experimental data (large, not needed in image)
+results/*.csv
+results/*.json
+results/*.pdf
+results/*.png
+results/*.svg
+results/phase1b/
+pilot/*.csv
+pilot/*.json
+pilot/raw/
+
+# Ollama model cache
+.models/
+
+# Docker Compose overrides
+docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+Markdown/
+
+# Tests (not needed at runtime)
+tests/
