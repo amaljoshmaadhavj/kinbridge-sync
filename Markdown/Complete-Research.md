@@ -127,16 +127,16 @@ $$R'(\tau) = w_d \beta \tau^{\beta-1} - w_m \alpha (1-\tau)^{\alpha-1}$$
 
 For the special case $\alpha = \beta$, setting $R'(\tau)=0$ and solving:
 
-$$\frac{\tau^{\alpha-1}}{(1-\tau)^{\alpha-1}} = \frac{w_d}{w_m} \implies \frac{\tau}{1-\tau} = \left(\frac{w_d}{w_m}\right)^{\frac{1}{\alpha-1}}$$
+$$w_d \tau^{\alpha-1} = w_m (1-\tau)^{\alpha-1} \implies \frac{\tau^{\alpha-1}}{(1-\tau)^{\alpha-1}} = \frac{w_m}{w_d} \implies \frac{\tau}{1-\tau} = \left(\frac{w_m}{w_d}\right)^{\frac{1}{\alpha-1}}$$
 
-Let $\rho = \left(\dfrac{w_d}{w_m}\right)^{\frac{1}{\alpha-1}}$. Then:
+Let $\rho = \left(\dfrac{w_d}{w_m}\right)^{\frac{1}{\alpha-1}}$ (the reciprocal of $\tau/(1-\tau)$). Then:
 
-$$\tau^\star = \frac{\rho}{1 + \rho} = \frac{1}{1 + \left(\frac{w_m}{w_d}\right)^{\frac{1}{\alpha-1}}} \quad \text{(valid when } \alpha=\beta\text{)}$$
+$$\tau^\star = \frac{1}{1 + \rho} = \frac{1}{1 + \left(\frac{w_d}{w_m}\right)^{\frac{1}{\alpha-1}}} \quad \text{(valid when } \alpha=\beta\text{)}$$
 
 **Lemma 1 (convexity and uniqueness):**
 $$R''(\tau) = w_d\beta(\beta-1)\tau^{\beta-2} + w_m\alpha(\alpha-1)(1-\tau)^{\alpha-2}$$
 
-When $\alpha > 1$ and $\beta > 1$, both terms are non-negative on $(0,1)$, so $R''(\tau) \geq 0$ and $R$ is convex. Under these conditions, $R'(0^+) = +\infty > 0$ and $R'(1^-) = -\infty < 0$, so $R'$ changes sign exactly once — the unique stationary point is the global minimum.
+When $\alpha > 1$ and $\beta > 1$, both terms are non-negative on $(0,1)$, so $R''(\tau) \geq 0$ and $R$ is convex. Under these conditions, $R'(0^+) = -w_m \alpha < 0$ and $R'(1^-) = +w_d \beta > 0$, so $R'$ changes sign exactly once — the unique stationary point is the global minimum.
 
 When $\alpha \leq 1$ or $\beta \leq 1$, $R''$ may not be non-negative on $(0,1)$; convexity cannot be assumed and the stationary point (if it exists) requires verification that it is a minimum.
 
@@ -145,7 +145,7 @@ When $\alpha \leq 1$ or $\beta \leq 1$, $R''$ may not be non-negative on $(0,1)$
 Input: measured (τ_i, FMR_i, FSR_i) triples from the pilot, cost ratio w_d/w_m
 1. Fit β = slope of log(FSR_i) vs log(τ_i)              [numpy.polyfit]
 2. Fit α = slope of log(FMR_i) vs log(1-τ_i)
-3. If |α-β| < 0.05: use the closed form τ* = ρ/(1+ρ)
+3. If |α-β| < 0.05: use the closed form τ* = 1/(1+ρ)
    where ρ = (w_d/w_m)^(1/(α-1))
 4. Else: bisect on R'(τ)=0 over [0.001, 0.999] for ~40 iterations
          (guaranteed to converge when α>1 and β>1 — Lemma 1)
@@ -234,6 +234,29 @@ a simple rubric (did it call the right tool with plausible arguments,
 python calibrate.py
 python measure_delta_q.py
 ```
+
+### Phase 1b — Verified calibration results
+
+The following results were obtained from the Phase 1b Design C calibration pipeline (19 positive/reissue pairs, 200 successful negative trials per temperature, `qwen2.5:7b-instruct`, seed=42).
+
+**Table: Phase 1b calibration results**
+
+| Parameter | T = 0.0 | T = 0.7 |
+|-----------|---------|---------|
+| α (FMR exponent) | 1.6650 | 1.5913 |
+| α R² | 0.9537 | 0.9579 |
+| β (FSR exponent) | unestimable | 5.4395 |
+| β R² | unestimable | 0.2061 |
+| τ\* | unestimable | 0.5052 |
+| Risk at τ\* | unestimable | 0.3343 |
+
+**Cost weights:** $w_d/w_m = 4$, $w_s = 0$, $P_{\text{stale}} = 0$.
+
+**Interpretation.** At both temperatures, the FMR power-law fit $\text{FMR}(\tau) \approx (1-\tau)^\alpha$ is strong ($R^2 > 0.95$), confirming the expected decreasing convex shape. The FSR fit $\text{FSR}(\tau) \approx \tau^\beta$ is problematic at both temperatures: at T = 0.0, the FSR data contain only one non-zero observation across all 19 reissue pairs (the model produces near-perfect similarity scores at low temperature), making the β fit impossible; at T = 0.7, 13 non-zero FSR observations yield β = 5.4395 but with weak fit quality ($R^2 = 0.2061$), indicating the power-law approximation does not capture the FSR curve well at this temperature.
+
+Because β is unestimable at T = 0.0, no τ\* can be derived from that temperature. At T = 0.7, $|\alpha - \beta| = 3.848 > 0.05$, so Algorithm 2's bisection branch was used (not the closed form). The resulting $\tau^\star = 0.5052$ is therefore a **model-derived calibration result with substantial fit uncertainty** — it is the numerical minimum of the fitted risk surface, not a universally optimal threshold. The weak β R² means the FSR component of the risk function is poorly constrained; the reported τ\* should be treated as an order-of-magnitude guide for downstream experiments (Phase 5), not as a precise operating point.
+
+Figure 2 (see `results/phase1b/fmr_fsr_curve.pdf`) shows the empirical FMR and FSR curves with the fitted power-law overlays at T = 0.7.
 
 ### Phase 2 — Tool world, buffer, link monitor
 Prompt for **opencode**:

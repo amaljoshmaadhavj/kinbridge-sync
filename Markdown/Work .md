@@ -665,7 +665,7 @@ You must implement that mathematical model.
 The model assumes:
 
 $$
-FSR(\tau)\approx(1-\tau)^\beta
+FSR(\tau)\approx\tau^\beta
 $$
 
 Take logs:
@@ -673,7 +673,7 @@ Take logs:
 $$
 \log FSR
 =
-\beta\log(1-\tau)
+\beta\log\tau
 $$
 
 Therefore:
@@ -687,7 +687,7 @@ $$
 of:
 
 $$
-x=\log(1-\tau)
+x=\log\tau
 $$
 
 versus:
@@ -703,7 +703,7 @@ $$
 Similarly:
 
 $$
-FMR(\tau)\approx\tau^\alpha
+FMR(\tau)\approx(1-\tau)^\alpha
 $$
 
 Therefore:
@@ -711,7 +711,7 @@ Therefore:
 $$
 \log FMR
 =
-\alpha\log\tau
+\alpha\log(1-\tau)
 $$
 
 so:
@@ -725,7 +725,7 @@ $$
 of:
 
 $$
-x=\log\tau
+x=\log(1-\tau)
 $$
 
 versus:
@@ -785,13 +785,13 @@ $$
 Substitute:
 
 $$
-FSR(\tau)=(1-\tau)^\beta
+FSR(\tau)=\tau^\beta
 $$
 
 and:
 
 $$
-FMR(\tau)=\tau^\alpha
+FMR(\tau)=(1-\tau)^\alpha
 $$
 
 giving:
@@ -799,9 +799,9 @@ giving:
 $$
 R(\tau)
 =
-w_d(1-\tau)^\beta
+w_d\tau^\beta
 +
-w_m\tau^\alpha
+w_m(1-\tau)^\alpha
 +
 w_sP_{stale}
 $$
@@ -817,9 +817,9 @@ Your code must explicitly implement:
 $$
 R'(\tau)
 =
--w_d\beta(1-\tau)^{\beta-1}
-+
-w_m\alpha\tau^{\alpha-1}
+w_d\beta\tau^{\beta-1}
+-
+w_m\alpha(1-\tau)^{\alpha-1}
 $$
 
 Do not numerically approximate the derivative unless you use it as a separate validation.
@@ -835,9 +835,9 @@ Also implement:
 $$
 R''(\tau)
 =
-w_d\beta(\beta-1)(1-\tau)^{\beta-2}
+w_d\beta(\beta-1)\tau^{\beta-2}
 +
-w_m\alpha(\alpha-1)\tau^{\alpha-2}
+w_m\alpha(\alpha-1)(1-\tau)^{\alpha-2}
 $$
 
 This lets you experimentally validate the convexity condition when:
@@ -863,11 +863,7 @@ is satisfied, use the closed-form solution.
 Define:
 
 $$
-A=
-\left(
-\frac{w_d\beta}
-{w_m\alpha}
-\right)^{1/(\alpha-1)}
+\rho = \left(\frac{w_d}{w_m}\right)^{1/(\alpha-1)}
 $$
 
 Then:
@@ -876,7 +872,7 @@ $$
 \boxed{
 \tau^*
 =
-\frac{A}{1+A}
+\frac{1}{1+\rho}
 }
 $$
 
@@ -886,8 +882,8 @@ For example:
 
 ```python
 def tau_star_closed_form(alpha, beta, wd, wm):
-    A = ((wd * beta) / (wm * alpha)) ** (1 / (alpha - 1))
-    return A / (1 + A)
+    rho = (wd / wm) ** (1 / (alpha - 1))
+    return 1.0 / (1.0 + rho)
 ```
 
 Do **not** simply use a hard-coded `0.87` or similar number.
@@ -995,13 +991,13 @@ and:
 Calculated from:
 
 $$
-(1-\tau)^\beta
+\text{FSR}(\tau) \approx \tau^\beta
 $$
 
 and:
 
 $$
-\tau^\alpha.
+\text{FMR}(\tau) \approx (1-\tau)^\alpha.
 $$
 
 Then compare them.
@@ -1161,16 +1157,16 @@ Implement:
 1. Empirical FMR(tau)
 2. Empirical FSR(tau)
 3. Log-log regression:
-       log(FSR) = beta * log(1-tau) + c
+       log(FSR) = beta * log(tau) + c
 4. Log-log regression:
-       log(FMR) = alpha * log(tau) + c
+       log(FMR) = alpha * log(1-tau) + c
 5. R² for both fits
 6. Check alpha > 1 and beta > 1
 7. Check |alpha-beta| < 0.05
 8. If condition holds, calculate:
 
-       A = ((wd*beta)/(wm*alpha))^(1/(alpha-1))
-       tau_star = A/(1+A)
+       rho = (wd/wm)^(1/(alpha-1))
+       tau_star = 1/(1+rho)
 
 9. Otherwise solve:
 

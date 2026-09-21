@@ -28,19 +28,19 @@ contribution — no bigger and no smaller than that.
 
 ## 1. Lemma 1 (Uniqueness) — the new math to add to the paper
 
-**Claim.** For $R(\tau) = w_d(1-\tau)^\beta + w_m \tau^\alpha$ (dropping
+**Claim.** For $R(\tau) = w_d \tau^\beta + w_m (1-\tau)^\alpha$ (dropping
 the constant $w_s P_{\text{stale}}$ term, which doesn't depend on $\tau$),
 with $\alpha, \beta > 1$ and $w_d, w_m > 0$, on the open interval
 $\tau \in (0,1)$:
 
-$$R''(\tau) = w_d\beta(\beta-1)(1-\tau)^{\beta-2} + w_m\alpha(\alpha-1)\tau^{\alpha-2} \;\geq\; 0$$
+$$R''(\tau) = w_d\beta(\beta-1)\tau^{\beta-2} + w_m\alpha(\alpha-1)(1-\tau)^{\alpha-2} \;\geq\; 0$$
 
 Both terms are non-negative (in fact strictly positive, since $\alpha,\beta>1$
 makes $(\alpha-1),(\beta-1)>0$ and the power terms are positive on the open
 interval), so $R$ is **strictly convex** on $(0,1)$.
 
 Boundary behavior of the first derivative:
-$$R'(\tau) \to -w_d\beta < 0 \text{ as } \tau \to 0^+, \qquad R'(\tau) \to w_m\alpha > 0 \text{ as } \tau \to 1^-$$
+$$R'(0^+) = -w_m\alpha < 0, \qquad R'(1^-) = +w_d\beta > 0$$
 
 $R'$ is continuous and strictly increasing (since $R''\geq0$), so by the
 Intermediate Value Theorem it crosses zero exactly once. **Conclusion:**
@@ -61,8 +61,8 @@ Input: (τ_i, FMR_i, FSR_i) samples from the Phase 1 pilot sweep,
        cost ratio w_d/w_m (a deployment choice, default 4)
 Output: τ*, the calibrated threshold, plus fitted α, β
 
-1. Fit β: linear-regress log(FSR_i) against log(1 - τ_i)   → slope = β
-2. Fit α: linear-regress log(FMR_i) against log(τ_i)        → slope = α
+1. Fit β: linear-regress log(FSR_i) against log(τ_i)           → slope = β
+2. Fit α: linear-regress log(FMR_i) against log(1 - τ_i)   → slope = α
 3. If |α - β| < ε (e.g. ε = 0.05):
        τ* = closed_form(w_d, w_m, α, β)        # Eq. 14, the α=β case
 4. Else (general case, uses Lemma 1's guarantee):

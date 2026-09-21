@@ -474,6 +474,26 @@ class TestTauStar:
         tau = _closed_form_tau_star(2.0, 2.0, 1.0, 1.0)
         assert abs(tau - 0.5) < 0.01
 
+    def test_closed_form_asymmetric_weights(self):
+        from kinbridge_math.tau_star import _closed_form_tau_star
+        from kinbridge_math.tau_star import risk_derivative_from_params
+        # alpha=beta=2, w_d=4, w_m=1
+        # rho = (w_d/w_m)^(1/(alpha-1)) = 4
+        # tau* = 1/(1+rho) = 1/5 = 0.2
+        tau = _closed_form_tau_star(2.0, 2.0, 4.0, 1.0)
+        assert abs(tau - 0.2) < 0.01
+        # Verify R'(tau*) ~= 0
+        dR = risk_derivative_from_params(tau, alpha=2.0, beta=2.0, w_d=4.0, w_m=1.0)
+        assert abs(dR) < 1e-10
+
+    def test_closed_form_not_inverted(self):
+        from kinbridge_math.tau_star import _closed_form_tau_star
+        # The OLD incorrect implementation returned rho/(1+rho) = 4/5 = 0.8
+        # The CORRECT implementation returns 1/(1+rho) = 1/5 = 0.2
+        tau = _closed_form_tau_star(2.0, 2.0, 4.0, 1.0)
+        assert abs(tau - 0.2) < 0.01, f"Expected 0.2, got {tau} (old bug would give 0.8)"
+        assert abs(tau - 0.8) > 0.1, "Must NOT be 0.8 (old inverted result)"
+
     def test_compute_tau_star_returns_result(self):
         from kinbridge_math.tau_star import compute_tau_star
         tau = np.linspace(0.05, 0.95, 50)

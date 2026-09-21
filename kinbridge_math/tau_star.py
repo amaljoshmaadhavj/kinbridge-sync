@@ -97,16 +97,16 @@ def _closed_form_tau_star(alpha: float, beta: float, w_d: float, w_m: float) -> 
     """Closed-form tau* when alpha ≈ beta.
 
     From R'(tau) = 0 with alpha = beta:
-      tau^(alpha-1) / (1-tau)^(alpha-1) = w_d / w_m
-      tau/(1-tau) = (w_d/w_m)^(1/(alpha-1)) = rho
-      tau* = rho / (1 + rho)
+      w_d * tau^(alpha-1) = w_m * (1-tau)^(alpha-1)
+      tau/(1-tau) = (w_m/w_d)^(1/(alpha-1))
+      tau* = 1/(1+rho) where rho = (w_d/w_m)^(1/(alpha-1))
     """
     eps = 1e-15
     a = max(alpha, eps)
     ratio = w_d / w_m
     exponent = 1.0 / (a - 1.0) if abs(a - 1.0) > eps else 10.0
     rho = ratio ** exponent
-    return rho / (1.0 + rho)
+    return 1.0 / (1.0 + rho)
 
 
 def _validate_params(
