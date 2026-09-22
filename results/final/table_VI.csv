@@ -1,0 +1,7 @@
+ablation_row,episodes,eligible_actions,n_unsafe,unsafe_rate,unsafe_ci_low,unsafe_ci_high,n_duplicate,n_stale,n_escalated,n_invalidated,median_ttr,cohens_h_vs_buffer_only
+buffer_only,0,0,0,0.0,0.0,0.0,0,0,0,0,,
+plus_hash_keys,0,0,0,0.0,0.0,0.0,0,0,0,0,,
+plus_intent_keys,0,0,0,0.0,0.0,0.0,0,0,0,0,,
+plus_staleness,0,0,0,0.0,0.0,0.0,0,0,0,0,,
+plus_epoch_guard,0,0,0,0.0,0.0,0.0,0,0,0,0,,
+plus_degradation_gate,0,0,0,0.0,0.0,0.0,0,0,0,0,,

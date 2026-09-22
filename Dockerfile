@@ -39,7 +39,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
         fastapi>=0.109.0 \
         uvicorn>=0.27.0 \
         pydantic>=2.6.0 \
-        pyyaml>=6.0.1
+        pyyaml>=6.0.1 \
+        redis>=5.0.0
 
 # ── Source code ──────────────────────────────────────────────
 # Copy the frozen Phase 2 packages and the pilot tool definitions
@@ -47,10 +48,10 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 COPY tool_world/   /app/tool_world/
 COPY client/       /app/client/
-COPY pilot/tools.py /app/pilot/tools.py
-COPY pilot/__init__.py /app/pilot/__init__.py
+COPY pilot/        /app/pilot/
 COPY core/         /app/core/
 COPY config/       /app/config/
+COPY experiments/replication/ /app/experiments/replication/
 
 # Ensure Python can import the packages from /app
 ENV PYTHONPATH=/app

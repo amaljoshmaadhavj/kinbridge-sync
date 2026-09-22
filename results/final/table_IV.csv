@@ -1,0 +1,5 @@
+method,episodes,eligible_actions,n_duplicate,duplicate_rate,duplicate_ci_low,duplicate_ci_high,n_stale,stale_rate,stale_ci_low,stale_ci_high,n_escalated,escalation_rate,escalation_ci_low,escalation_ci_high,n_unsafe,unsafe_rate,unsafe_ci_low,unsafe_ci_high,median_ttr,cohens_h_vs_cold,n_invalidated
+cold_restart,0,0,,0.0,0.0,0.0,,0.0,0.0,0.0,,0.0,0.0,0.0,0,0.0,0.0,0.0,,0.0,0
+naive_retry,0,0,,0.0,0.0,0.0,,0.0,0.0,0.0,,0.0,0.0,0.0,0,0.0,0.0,0.0,,0.0,0
+verify_before_retry,0,0,,0.0,0.0,0.0,,0.0,0.0,0.0,,0.0,0.0,0.0,0,0.0,0.0,0.0,,0.0,0
+kinbridge_sync,2,4,,0.0,0.0,0.48990002040399916,,0.0,0.0,0.48990002040399916,,0.0,0.0,0.48990002040399916,0,0.0,0.0,0.48990002040399916,0.0,0.0,2

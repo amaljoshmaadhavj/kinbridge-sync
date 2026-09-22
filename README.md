@@ -17,9 +17,11 @@ Kinbridge-Sync investigates the safe execution and reconciliation of stateful La
 | **Phase 2.1** | Tool-world FastAPI service + SQLite effect ledger | **COMPLETE / FROZEN** |
 | **Phase 2.2** | Client Action Buffer (JSONL WAL) + Link Monitor (EWMA & hysteresis FSM) | **COMPLETE / FROZEN** |
 | **Phase 3a** | Containerization and network emulation testbed (Docker Compose, `netctl`, Gilbert–Elliott) | **COMPLETE / FROZEN** |
-| **Phase 3b** | Replication-lag forwarder between edge nodes | **NOT IMPLEMENTED / Architecture clarification pending** |
-| **Phase 4** | Reintegration service (Algorithm 1 + baselines) | *Future phase* |
-| **Phase 5** | Factorial experiments and ablation evaluation | *Future phase* |
+| **Phase 3b** | Replication-lag forwarder between edge nodes | **COMPLETE / FROZEN** |
+| **Phase 4** | Reintegration service (Algorithm 1 + baselines) | **COMPLETE / FROZEN** |
+| **Phase 5** | Factorial experiments and ablation evaluation | **IMPLEMENTED — smoke only (full 1600-episode grid not run)** |
+
+Phase 5 delivers the in-process episode harness, `run_experiment` / `analyze_results`, scenario/τ*/ablation/C3 modules, and tests A–X (`tests/test_phase5.py`). A 2-episode smoke run lives under `results/final/` and is **not** paper-scale evidence. See `Phase5-Implementation-Report.md`.
 
 ---
 

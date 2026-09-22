@@ -1,15 +1,14 @@
 # ─────────────────────────────────────────────────────────────
-# Kinbridge-Sync — Docker Compose network testbed (Phase 3a)
+# Kinbridge-Sync — Docker Compose network testbed (Phase 3b)
 # ─────────────────────────────────────────────────────────────
 #
-# Three-service testbed: client, edge-a, edge-b.
-# All services use the validated kinbridge-sync:phase3a image.
-# Edge services run the tool-world FastAPI application.
+# Six-service testbed: client, edge-a, edge-b, redis-a, redis-b, replicator.
+# All application services use the kinbridge-sync:phase3a image.
+# Redis services use the official redis:7-alpine image.
+# Edge services run tool-world FastAPI + replication bridge processes.
 #
 # Network-control capabilities (NET_ADMIN, NET_RAW) are provided
 # to edge services for Phase 3 tc/netem and iptables experiments.
-#
-# Redis and replication are NOT included — deferred to Phase 3b.
 
 services:
   client:
@@ -25,6 +24,36 @@ services:
       timeout: 5s
       retries: 3
 
+  redis-a:
+    image: redis:7-alpine
+    container_name: kb-redis-a
+    networks:
+      - kinbridge-net
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-a-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  redis-b:
+    image: redis:7-alpine
+    container_name: kb-redis-b
+    networks:
+      - kinbridge-net
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-b-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   edge-a:
     image: kinbridge-sync:phase3a
     container_name: kb-edge-a
@@ -35,9 +64,19 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
+    depends_on:
+      redis-a:
+        condition: service_healthy
     environment:
       - KINBRIDGE_PORT=8000
-    command: uvicorn tool_world.main:app --host 0.0.0.0 --port 8000
+      - KINBRIDGE_DB_PATH=/app/data/effects.db
+      - REDIS_A_URL=redis://redis-a:6379/0
+    volumes:
+      - edge-a-data:/app/data
+    command: >
+      sh -c "mkdir -p /app/data &&
+             uvicorn tool_world.main:app --host 0.0.0.0 --port 8000 &
+             python -m experiments.replication.sqlite_watcher"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 10s
@@ -54,15 +93,48 @@ services:
     cap_add:
       - NET_ADMIN
       - NET_RAW
+    depends_on:
+      redis-b:
+        condition: service_healthy
     environment:
       - KINBRIDGE_PORT=8001
-    command: uvicorn tool_world.main:app --host 0.0.0.0 --port 8001
+      - KINBRIDGE_DB_PATH=/app/data/effects.db
+      - REDIS_B_URL=redis://redis-b:6379/0
+    volumes:
+      - edge-b-data:/app/data
+    command: >
+      sh -c "mkdir -p /app/data &&
+             uvicorn tool_world.main:app --host 0.0.0.0 --port 8001 &
+             python -m experiments.replication.sqlite_writer"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
       interval: 10s
       timeout: 5s
       retries: 3
 
+  replicator:
+    image: kinbridge-sync:phase3a
+    container_name: kb-replicator
+    networks:
+      - kinbridge-net
+    depends_on:
+      redis-a:
+        condition: service_healthy
+      redis-b:
+        condition: service_healthy
+    environment:
+      - REDIS_A_URL=redis://redis-a:6379/0
+      - REDIS_B_URL=redis://redis-b:6379/0
+      - REPLICATOR_LAG_MS=0
+    command: >
+      python -m experiments.replication.replicator --lag-ms 0
+
 networks:
   kinbridge-net:
     driver: bridge
+
+volumes:
+  redis-a-data:
+  redis-b-data:
+  edge-a-data:
+  edge-b-data:

@@ -25,8 +25,10 @@ _COMPOSE_FILE = Path(__file__).resolve().parent.parent / "docker-compose.yml"
 _PROJECT_ROOT = _COMPOSE_FILE.parent
 _IMAGE_TAG = "kinbridge-sync:phase3a"
 
-_EXPECTED_SERVICES = {"client", "edge-a", "edge-b"}
+_EXPECTED_SERVICES = {"client", "edge-a", "edge-b", "redis-a", "redis-b", "replicator"}
 _EDGE_SERVICES = {"edge-a", "edge-b"}
+_APP_SERVICES = {"client", "edge-a", "edge-b", "replicator"}
+_REDIS_SERVICES = {"redis-a", "redis-b"}
 
 _NETWORK_NAME = "kinbridge-net"
 
@@ -89,15 +91,21 @@ class TestStaticComposeDefinition:
     def test_has_services_key(self):
         assert "services" in self.compose
 
-    def test_exactly_three_services(self):
+    def test_exactly_six_services(self):
         services = set(self.compose["services"].keys())
         assert services == _EXPECTED_SERVICES
 
-    def test_all_services_use_validated_image(self):
+    def test_all_services_use_valid_image(self):
         for name, svc in self.compose["services"].items():
-            assert svc.get("image") == _IMAGE_TAG, (
-                f"Service {name} uses image {svc.get('image')}, expected {_IMAGE_TAG}"
-            )
+            image = svc.get("image", "")
+            if name in _REDIS_SERVICES:
+                assert "redis" in image.lower(), (
+                    f"Service {name} uses image {image}, expected redis image"
+                )
+            else:
+                assert image == _IMAGE_TAG, (
+                    f"Service {name} uses image {image}, expected {_IMAGE_TAG}"
+                )
 
     def test_edge_a_has_net_admin(self):
         caps = self.compose["services"]["edge-a"].get("cap_add", [])
@@ -121,11 +129,14 @@ class TestStaticComposeDefinition:
                 f"Service {name} has privileged=true"
             )
 
-    def test_no_redis_service(self):
+    def test_redis_services_present(self):
         services = set(self.compose["services"].keys())
-        assert "redis" not in services
-        assert "redis-a" not in services
-        assert "redis-b" not in services
+        assert "redis-a" in services
+        assert "redis-b" in services
+
+    def test_replicator_service_present(self):
+        services = set(self.compose["services"].keys())
+        assert "replicator" in services
 
     def test_edge_a_port_mapping(self):
         ports = self.compose["services"]["edge-a"].get("ports", [])
@@ -153,11 +164,19 @@ class TestStaticComposeDefinition:
         assert "tool_world.main:app" in cmd
         assert "8000" in cmd
 
+    def test_edge_a_command_starts_watcher(self):
+        cmd = self.compose["services"]["edge-a"].get("command", "")
+        assert "sqlite_watcher" in cmd
+
     def test_edge_b_command_starts_uvicorn(self):
         cmd = self.compose["services"]["edge-b"].get("command", "")
         assert "uvicorn" in cmd
         assert "tool_world.main:app" in cmd
         assert "8001" in cmd
+
+    def test_edge_b_command_starts_writer(self):
+        cmd = self.compose["services"]["edge-b"].get("command", "")
+        assert "sqlite_writer" in cmd
 
     def test_edge_a_env_sets_port(self):
         env = self.compose["services"]["edge-a"].get("environment", [])
@@ -182,6 +201,57 @@ class TestStaticComposeDefinition:
     def test_client_has_healthcheck(self):
         hc = self.compose["services"]["client"].get("healthcheck", {})
         assert "test" in hc
+
+    def test_redis_a_has_healthcheck(self):
+        hc = self.compose["services"]["redis-a"].get("healthcheck", {})
+        assert "test" in hc
+
+    def test_redis_b_has_healthcheck(self):
+        hc = self.compose["services"]["redis-b"].get("healthcheck", {})
+        assert "test" in hc
+
+    def test_replicator_command(self):
+        cmd = self.compose["services"]["replicator"].get("command", "")
+        assert "replicator" in cmd
+        assert "--lag-ms" in cmd
+
+    def test_edge_a_depends_on_redis_a(self):
+        deps = self.compose["services"]["edge-a"].get("depends_on", {})
+        assert "redis-a" in deps
+
+    def test_edge_b_depends_on_redis_b(self):
+        deps = self.compose["services"]["edge-b"].get("depends_on", {})
+        assert "redis-b" in deps
+
+    def test_replicator_depends_on_both_redis(self):
+        deps = self.compose["services"]["replicator"].get("depends_on", {})
+        assert "redis-a" in deps
+        assert "redis-b" in deps
+
+    def test_redis_a_port_mapping(self):
+        ports = self.compose["services"]["redis-a"].get("ports", [])
+        assert "6379:6379" in ports
+
+    def test_redis_b_port_mapping(self):
+        ports = self.compose["services"]["redis-b"].get("ports", [])
+        assert "6380:6379" in ports
+
+    def test_edge_a_env_sets_redis_url(self):
+        env = self.compose["services"]["edge-a"].get("environment", [])
+        env_str = " ".join(env) if isinstance(env, list) else str(env)
+        assert "REDIS_A_URL" in env_str
+
+    def test_edge_b_env_sets_redis_url(self):
+        env = self.compose["services"]["edge-b"].get("environment", [])
+        env_str = " ".join(env) if isinstance(env, list) else str(env)
+        assert "REDIS_B_URL" in env_str
+
+    def test_volumes_defined(self):
+        volumes = self.compose.get("volumes", {})
+        assert "redis-a-data" in volumes
+        assert "redis-b-data" in volumes
+        assert "edge-a-data" in volumes
+        assert "edge-b-data" in volumes
 
 
 # ---------------------------------------------------------------------------
@@ -329,3 +399,31 @@ class TestConnectivity:
         )
         assert result.returncode == 0
         assert result.stdout.strip()
+
+    def test_edge_a_can_resolve_redis_a(self):
+        result = subprocess.run(
+            ["docker", "exec", "kb-edge-a", "python", "-c",
+             "import socket; print(socket.gethostbyname('redis-a'))"],
+            capture_output=True, text=True, timeout=10,
+        )
+        assert result.returncode == 0
+        assert result.stdout.strip()
+
+    def test_edge_b_can_resolve_redis_b(self):
+        result = subprocess.run(
+            ["docker", "exec", "kb-edge-b", "python", "-c",
+             "import socket; print(socket.gethostbyname('redis-b'))"],
+            capture_output=True, text=True, timeout=10,
+        )
+        assert result.returncode == 0
+        assert result.stdout.strip()
+
+    def test_replicator_can_resolve_both_redis(self):
+        result = subprocess.run(
+            ["docker", "exec", "kb-replicator", "python", "-c",
+             "import socket; print(socket.gethostbyname('redis-a')); print(socket.gethostbyname('redis-b'))"],
+            capture_output=True, text=True, timeout=10,
+        )
+        assert result.returncode == 0
+        lines = result.stdout.strip().splitlines()
+        assert len(lines) == 2

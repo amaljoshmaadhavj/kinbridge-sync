@@ -117,7 +117,7 @@ class TestStaticValidation:
 
     def test_dockerfile_copies_pilot_tools(self):
         content = _DOCKERFILE.read_text(encoding="utf-8")
-        assert "COPY pilot/tools.py" in content, "Must copy pilot/tools.py"
+        assert "COPY pilot/" in content, "Must copy pilot/"
 
     def test_source_files_exist(self):
         """All files referenced by COPY instructions must exist."""
@@ -132,6 +132,7 @@ class TestStaticValidation:
             "client/link_monitor.py",
             "pilot/tools.py",
             "pilot/__init__.py",
+            "pilot/key_schemes.py",
             "core/__init__.py",
             "core/config.py",
         ]

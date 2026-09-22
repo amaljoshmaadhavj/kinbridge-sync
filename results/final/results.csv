@@ -1,0 +1,3 @@
+episode_id,method,outage_duration,outage_profile,seed,episode_seed,key_scheme,ablation_row,replication_lag,topology,source_node,reconnect_node,ttr_seconds,epoch_guard_result,tau_star,scenario_id,n_actions,n_eligible,n_duplicate,n_stale,n_escalated,n_invalidated,n_unsafe,unsafe_action_rate
+0,kinbridge_sync,90,baseline,42,6001708019872317191,intent,full,0,same-node,edge-a,edge-a,0.0,True,0.5051826557580381,replan-dup-2,2,2,0,0,0,1,0,0.0
+1,kinbridge_sync,90,baseline,42,4931805234087514654,intent,full,0,same-node,edge-a,edge-a,0.0,True,0.5051826557580381,replan-dup-2,2,2,0,0,0,1,0,0.0

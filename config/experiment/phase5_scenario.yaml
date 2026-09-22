@@ -1,0 +1,175 @@
+# ─────────────────────────────────────────────────────────────
+# Phase 5 — experiment scenario / episode / ablation configuration
+# ─────────────────────────────────────────────────────────────
+#
+# This is a NEW Phase 5 configuration file (B1 resolution).
+# It does NOT modify the frozen methodology configuration:
+#   - config/experiment/factorial.yaml   (FROZEN — untouched)
+#   - config/experiment/ablation.yaml    (FROZEN — untouched)
+#
+# Every experimental semantic is explicit here; the runner never
+# relies on implicit defaults.
+#
+# The scenario uses deterministic synthetic tool actions from the
+# existing tool world. Ground truth is unambiguous: each buffered
+# action has a known intended effect identity.
+# ─────────────────────────────────────────────────────────────
+
+scenario_id: "replan-dup-2"
+
+# Deterministic reproducibility master seed (matching pilot/factorial).
+master_seed: 42
+
+# Calibration context (Phase 1b).  tau_star is READ from the artifact,
+# never hardcoded in code or configuration.
+calibration:
+  artifact: results/phase1b/tau_star_results.csv
+  temperature: 0.7        # T=0.7 calibration context (tau*estimable)
+  # T=0.0 row is "unestimable" -> semantic comparison requires tau* ->
+  # affected action ESCALATED (fail closed, Phase 4 semantics).
+
+temperature: 0.7          # LLM sampling context (Phase 1b semantic context label)
+semantic_model: "all-MiniLM-L6-v2"
+
+# ─────────────────────────────────────────────────────────────
+# Episode template (deterministic synthetic actions)
+# ─────────────────────────────────────────────────────────────
+# Every episode executes exactly this two-intent template.
+# Each action has a fixed intended effect identity (effect_identity)
+# so the harness can distinguish:
+#   legitimate first execution | duplicate execution | stale execution
+#   escalation | invalidation  | committed / no-replay
+episode:
+
+  # Simulation horizon per episode (seconds, harness clock).
+  sim_horizon_s: 3600.0
+  # Sync window used by the Algorithm 1 epoch guard (seconds).
+  sync_window_s: 2.0
+  # Epoch-guard poll interval (matches Phase 4 default, 50 ms).
+  epoch_poll_interval_s: 0.05
+
+  # Actions buffered pre-gap (the client's write-ahead log).
+  actions:
+    - id: "a1"
+      tool: "navigate_to"
+      args: {lat: 40.7128, lon: -74.0060, mode: "shortest"}
+      intent_id: "INT-A1"
+      session_id: "SESS-P5"
+      turn_seq: 1
+      ttl: 0.0                    # no freshness window
+      delivery: "pre_gap"        # delivered + committed pre-gap (ACK received)
+      effect_identity: "E1"
+    - id: "a2"
+      tool: "request_supply_drop"
+      args: {lat: 40.7000, lon: -74.0000, payload: "medical-kit-2", priority: "high"}
+      intent_id: "INT-A2"
+      session_id: "SESS-P5"
+      turn_seq: 2
+      ttl: 30.0                  # freshness window: staleness fires when outage > ttl
+      delivery: "in_flight"      # sent during the outage; never delivered (no ACK)
+      effect_identity: "E2"
+
+  # Post-gap re-plan: the LLM re-plans the SAME two intents at new turns.
+  # New turn_seq => fresh intent keys MUST diverge from the pre-gap keys.
+  replanned_actions:
+    - id: "a1p"
+      intent_id: "INT-A1"
+      session_id: "SESS-P5"
+      turn_seq: 99
+      tool: "navigate_to"
+      args: {lat: 40.7128, lon: -74.0060, mode: "shortest"}
+    - id: "a2p"
+      intent_id: "INT-A2"
+      session_id: "SESS-P5"
+      turn_seq: 100
+      tool: "request_supply_drop"
+      args: {lat: 40.7000, lon: -74.0000, payload: "medical-kit-2", priority: "high"}
+
+  # Post-gap client policy (Phase 5 HARNESS semantics — documented in
+  # Phase5-Implementation-Report.md).  After reintegration the client
+  # considers each re-planned action:
+  #   COMMITTED / REPLAYED -> skip (effect already applied; resending would
+  #       create a new-record duplicate)
+  #   MERGED               -> execute ONCE (the merged intent is carried out
+  #       by the re-planned action, not the discarded buffered attempt)
+  #   ESCALATED / INVALIDATED -> skip (no execution; availability loss)
+  #   no buffer counterpart -> execute normally
+  client_policy: "decision_based"
+
+  # V_pre / V_post harness hooks (Phase 4 semantics).
+  # V_pre is applied on the genuine-absent primary path; V_post on UNKNOWN.
+  v_pre_outcome: true             # action preconditions hold
+  v_post_outcome: false           # no independent post-condition confirmation
+
+# ─────────────────────────────────────────────────────────────
+# Factorial default conditions (B4/B7 resolution)
+# ─────────────────────────────────────────────────────────────
+# The factorial grid (methods x outage, Table III/IV) is run at a
+# single, recorded baseline C3 condition.  The dedicated C3 grid
+# (Table V) varies these explicitly.
+defaults:
+  # same-node: action buffered and reintegrated against the SAME edge node.
+  topology: "same-node"
+  reconnect_node: "edge-a"
+  source_node: "edge-a"
+  # replication lag for the cross-node C3 grid:
+  #   0   synchronous (existing replicator configuration)
+  #   500 configured lag (compose override --lag-ms 500)
+  #   -1  unreplicated (replicator "never" behavior)
+  replication_lag_ms: 0
+
+# ─────────────────────────────────────────────────────────────
+# C3 grid (Table V) — Kinbridge-Sync only
+# ─────────────────────────────────────────────────────────────
+c3_grid:
+  replication_lag_ms: [0, 500, -1]
+  topologies: ["same-node", "cross-node"]
+  method: "kinbridge_sync"
+
+# ─────────────────────────────────────────────────────────────
+# Ablation ladder (B3/B5 resolution)
+# ─────────────────────────────────────────────────────────────
+# Six explicit Table VI rows. Each row states the key scheme and the
+# feature flags independently (hash-vs-intent is NEVER inferred from a
+# boolean flag).
+ablation_ladder:
+  fixed_method: "kinbridge_sync"
+  fixed_outage_s: 90
+  episodes_per_row: 200
+  rows:
+    - row: "buffer_only"
+      key_scheme: "none"
+      enable_intent_keys: false
+      enable_staleness_check: false
+      enable_epoch_guard: false
+      enable_degradation_gate: false
+    - row: "plus_hash_keys"
+      key_scheme: "payload"
+      enable_intent_keys: false
+      enable_staleness_check: false
+      enable_epoch_guard: false
+      enable_degradation_gate: false
+    - row: "plus_intent_keys"
+      key_scheme: "intent"
+      enable_intent_keys: true
+      enable_staleness_check: false
+      enable_epoch_guard: false
+      enable_degradation_gate: false
+    - row: "plus_staleness"
+      key_scheme: "intent"
+      enable_intent_keys: true
+      enable_staleness_check: true
+      enable_epoch_guard: false
+      enable_degradation_gate: false
+    - row: "plus_epoch_guard"
+      key_scheme: "intent"
+      enable_intent_keys: true
+      enable_staleness_check: true
+      enable_epoch_guard: true
+      enable_degradation_gate: false
+    - row: "plus_degradation_gate"
+      key_scheme: "intent"
+      enable_intent_keys: true
+      enable_staleness_check: true
+      enable_epoch_guard: true
+      enable_degradation_gate: true
