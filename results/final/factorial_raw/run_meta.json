@@ -1,0 +1,7 @@
+﻿{
+    "ended":  "2026-09-22T22:18:58.3738943+05:30",
+    "started":  "2026-09-22T22:17:19.0523484+05:30",
+    "command":  "python -m experiments.run_experiment --grid factorial --episodes 100 --seed 42 --harness inprocess --output-dir results/final/factorial_raw",
+    "elapsed_s":  99.32,
+    "exit_code":  0
+}

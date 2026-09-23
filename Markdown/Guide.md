@@ -241,14 +241,14 @@ data collected during the run, replacing the illustrative curve.
 python run_experiment.py --episodes 100
 python analyze_results.py
 ```
-This is an unattended run — expect roughly one overnight session for the full 1,200-episode grid on a single laptop, matching the budget already stated in the paper.
+This is an unattended run — expect roughly one overnight session for the full 1,600-episode grid on a single laptop, matching the budget already stated in the paper (4 methods × 4 outage durations × 100 episodes).
 
 ---
 
 ## Part D — Getting the numbers back into the paper
 
 Once each phase's script has run:
-1. `analyze_pilot.py`'s printed table → replace the dashes in **Table II** (`tab:pilot`).
+1. `analyze_pilot.py`'s printed table → **Table II remains unavailable/pending** (per the final research decision). Do not fabricate or substitute values; leave it as NOT_AVAILABLE / PENDING unless a defensible source is subsequently obtained.
 2. `analyze_results.py`'s output → replace the dashes in **Tables III–VI** (`tab:headline`, `tab:decomp`, `tab:c3`, `tab:ablation`).
 3. The regenerated `fmr_fsr_curve.pdf` → overwrite the existing file referenced by `\includegraphics` in the `.tex` — the LaTeX doesn't need to change, just the PDF it points to.
 4. Change the wording: every place the paper currently says "planned," "template," "we expect," or "\todo{To be filled in during Phase X}" should become a plain statement of what was measured, and the Limitations section's "has not been run at the time of writing" sentence should be deleted or updated to describe what *was* run.

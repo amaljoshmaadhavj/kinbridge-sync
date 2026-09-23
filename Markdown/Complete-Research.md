@@ -359,6 +359,44 @@ python analyze_results.py
 ```
 Expect roughly one overnight run for the full grid, matching the paper's stated budget.
 
+### Phase 5 — Verified factorial results
+
+The full 1600-episode factorial was executed and independently audited (Phase 6A: all rates, Wilson CIs, Cohen's h, and counts recomputed from the raw records in `results/final/factorial_raw/episodes.jsonl`; PASS WITH QUALIFICATIONS). Configuration: 4 methods × 4 deterministic outage durations (0/10/90/300 s) × 100 episodes, master seed 42 with deterministic per-episode child seeds, scenario `replan-dup-2`, same-node topology, 0 ms replication lag, `intent` key scheme, temperature 0.7, τ\* imported from the Phase 1b calibration (0.5051826557580381).
+
+**Table: Phase 5 unsafe-action rate (method × outage), Wilson 95% CI**
+
+`unsafe = duplicate OR stale_execution` (escalation alone is not unsafe).
+
+| method / outage | 0 s | 10 s | 90 s | 300 s |
+|---|---|---|---|---|
+| `cold_restart` | 1.0000 [0.9812, 1.0000] | 0.5000 [0.4314, 0.5686] | 1.0000 [0.9812, 1.0000] | 1.0000 [0.9812, 1.0000] |
+| `naive_retry` | 0.0000 [0.0000, 0.0188] | 0.0000 [0.0000, 0.0188] | 0.5000 [0.4314, 0.5686] | 0.5000 [0.4314, 0.5686] |
+| `verify_before_retry` | 0.0000 [0.0000, 0.0188] | 0.0000 [0.0000, 0.0188] | 0.5000 [0.4314, 0.5686] | 0.5000 [0.4314, 0.5686] |
+| `kinbridge_sync` | 0.0000 [0.0000, 0.0188] | 0.0000 [0.0000, 0.0188] | 0.0000 [0.0000, 0.0188] | 0.0000 [0.0000, 0.0188] |
+
+**Table: Phase 5 decomposition by method (800 actions per method)**
+
+| method | duplicate | stale | escalation | unsafe | median TTR | n_invalidated |
+|---|---|---|---|---|---|---|
+| `cold_restart` | 0.6250 | 0.2500 | 0.0000 | 0.8750 | 0.0 | 0 |
+| `naive_retry` | 0.0000 | 0.2500 | 0.0000 | 0.2500 | 0.0 | 0 |
+| `verify_before_retry` | 0.0000 | 0.2500 | 0.0000 | 0.2500 | 0.0 | 0 |
+| `kinbridge_sync` | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0 | 200 |
+
+**Effect sizes (Cohen's h vs `cold_restart`):** `cold_restart` 0.0, `naive_retry` −1.3716608546, `verify_before_retry` −1.3716608546, `kinbridge_sync` −2.4188584058.
+
+**Interpretation.** In the tested scenario and configuration, `kinbridge_sync` recorded zero duplicate and zero stale executions across all four deterministic outage conditions (0/800 unsafe, Wilson CI [0.0000, 0.0188]). In the factorial experiment the observed protective outcome was **invalidation** (200 invalidated actions, all at the 90 s and 300 s cells where outage duration exceeds the a2 TTL of 30 s); **no escalation decisions occurred** (escalation rate 0.0000 in every cell), so the escalation path remains unexercised by this experiment. `cold_restart` recorded 700/800 unsafe (500 duplicate + 200 stale); `naive_retry` and `verify_before_retry` each recorded 200/800 unsafe, entirely stale executions with zero duplicates.
+
+**Measurement caveats.** Time-to-recovery was **not meaningfully exercised by the in-process harness; all recorded TTR values were 0.0**, so the 0.0 median is an artifact of unexercised measurement, not evidence of instant recovery. Outages were **deterministic 0/10/90/300-second fixed-duration conditions**; the factorial did not use stochastic Gilbert–Elliott outage sampling.
+
+**Model vs empirical distinction.** The cell categories matched the model trace's predictions (cold {1, .5, 1, 1}; naive/verify {0, 0, .5, .5}; kinbridge {0, 0, 0, 0}). This counts as agreement with the model trace; τ\* itself remains the Phase 1b model-derived calibration with the fit uncertainties noted in that section, not an independently recalibrated operating point. Under the tested same-node, zero-replication-lag configuration this cell agreement is an empirical outcome, but the replication-lag mechanism (C3) is not covered by the factorial.
+
+**Not fabricated.** Table II (pilot key-scheme divergence) is explicitly unavailable/pending from this experiment (`results/final/table_II.csv`); the C3 grid (Table V) reports only the 0 ms / same-node cell (100 episodes, unsafe 0.0), with the remainder unmeasured; the ablation ladder (Table VI) was not part of the 1600-episode factorial and was not run — no rows were substituted.
+
+**Limitations.** 1) Same-node topology only; 2) replication lag = 0 ms; 3) C3 lag × topology grid not completed by the factorial; 4) ablation grid not included in the 1600 episodes; 5) Table II unavailable from this experiment; 6) TTR not meaningfully measured (all 0.0); 7) escalation path not exercised; 8) outages were deterministic fixed-duration conditions, not stochastic Gilbert–Elliott sampling; 9) τ\* imported from Phase 1b calibration, not independently calibrated in Phase 5; 10) results cover the `replan-dup-2` scenario only and should not be generalized beyond the tested scenario without additional evidence.
+
+Consequently, the paper should not claim that the escalation branch, the C3 replication-lag benefit, or instant recovery were experimentally validated, and should not rank the methods; it may state only the measured facts above for the tested configuration.
+
 ---
 
 # PART 5 — Task split: Amal and Santhosh

@@ -155,5 +155,5 @@ parallel on two separate machines with no coordination needed.
 
 What this does **not** do: turn a course/project-scale evaluation into a
 venue-grade one. Single-laptop Docker emulation, three tool classes, and
-a 1,200-episode budget are appropriate for what this is — don't oversell
+a 1,600-episode budget are appropriate for what this is — don't oversell
 it as more than that in the abstract once real numbers go in.

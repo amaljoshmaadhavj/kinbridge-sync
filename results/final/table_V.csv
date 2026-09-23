@@ -1,5 +1,5 @@
 replication_lag_ms,topology,method,episodes,eligible_actions,n_unsafe,unsafe_rate,unsafe_ci_low,unsafe_ci_high,n_duplicate,n_stale,n_escalated,median_ttr,epoch_guard_pass_episodes
-0,same-node,kinbridge_sync,2,4,0,0.0,0.0,0.48990002040399916,0,0,0,0.0,2
+0,same-node,kinbridge_sync,100,200,0,0.0,0.0,0.018846005918320894,0,0,0,0.0,100
 0,cross-node,kinbridge_sync,0,0,0,0.0,0.0,0.0,0,0,0,,0
 500,same-node,kinbridge_sync,0,0,0,0.0,0.0,0.0,0,0,0,,0
 500,cross-node,kinbridge_sync,0,0,0,0.0,0.0,0.0,0,0,0,,0
