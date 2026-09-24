@@ -68,3 +68,25 @@ Thumbs.db
 
 # Phase 1b calibration results (regenerable)
 results/phase1b/
+
+# Research manuscript / submission artifacts
+paper/
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+texput.log
