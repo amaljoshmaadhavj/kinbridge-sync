@@ -266,7 +266,7 @@ kinbridge-sync/
 │   ├── testbed/                # Docker network topology configuration
 │   └── tools/                  # Tool schemas
 ├── core/                       # Shared utilities (config loader, seed control)
-├── experiments/                # Phase 3a network emulation & testbed tools
+├── experiments/                # Phase 3a/5 experiment tooling
 │   ├── netctl.py               # Linux tc/netem and iptables control
 │   ├── outage_model.py         # Gilbert–Elliott Markov model
 │   ├── run_experiment.py       # Experiment runner entrypoint
@@ -279,6 +279,7 @@ kinbridge-sync/
 │   ├── degradation_threshold.py# Quality gap thresholding
 │   ├── measure_delta_q.py      # SLM quality gap evaluation
 │   └── validate_tau.py         # Threshold sweep evaluation
+├── Markdown/                   # Phase/implementation research documentation
 ├── pilot/                      # Phase 1 pilot study implementation
 │   ├── analyze_pilot.py        # Pilot divergence analysis
 │   ├── fmr_fsr.py              # Error rate calculation
@@ -289,9 +290,18 @@ kinbridge-sync/
 │   ├── run_pilot.py            # Pilot prompt runner
 │   ├── similarity.py           # Sentence-transformers action cosine similarity
 │   ├── tools.py                # Tool definitions
-│   └── wilson.py               # Wilson score confidence intervals
+│   ├── wilson.py               # Wilson score confidence intervals
+│   ├── raw/                    # Raw pilot execution outputs
+│   └── tests/                  # Phase 1/1b pilot tests
+├── reintegration/              # Phase 4 reintegration service (Algorithm 1 + baselines)
+│   ├── reintegration_service.py
+│   ├── naive_retry.py
+│   └── verify_before_retry.py
 ├── results/                    # Preserved experimental outputs & figures
 │   ├── phase1b/                # Calibrated curves, summary JSON, and fits
+│   ├── final/                  # Phase 5 factorial tables + raw episodes (factorial_raw/)
+│   ├── figures/                # Result visualizations
+│   ├── processed/              # Processed pilot/intermediate outputs
 │   ├── raw/                    # Raw pilot execution outputs
 │   └── raw_fmr/                # Raw negative trials outputs
 ├── tests/                      # Repository test suite (553 tests / 15 modules)
@@ -307,7 +317,12 @@ kinbridge-sync/
 │   ├── test_reintegration_service.py
 │   ├── test_replicator.py
 │   ├── test_sqlite_watcher.py
-│   ├── test_sqlite_writer.py
+│   └── test_sqlite_writer.py
+├── tool_world/                 # Phase 2.1 tool services and SQLite effect ledger
+│   ├── main.py                 # FastAPI application
+│   ├── ledger.py               # SQLite effect ledger state machine
+│   ├── models.py
+│   └── config.py
 ├── Dockerfile                  # Unified Phase 3a container image definition
 ├── docker-compose.yml          # Three-node network testbed topology
 ├── requirements.txt            # Project dependencies
